@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link href="css/BoardTable.css" rel="stylesheet" type="text/css">
+        <title>글 조회</title>
+    </head>
+    <body>
+        <div class="container">
+            <form action="/modifyArticlePage" method="post">
+                <table>
+                        <colgroup>
+                            <col style="width: 25%">
+                            <col style="width: 70%">
+                        </colgroup>
+                    <thead>
+                        <tr>
+                            <td colspan="2">
+                                <h1>조회페이지</h1>
+                                <input type="hidden" th:value="${article.boardNo}" name="boardNo">
+                                <input type="hidden" th:value="${pageNum}" name="pageNum">
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="viewTextTitle"> 작성자 </td>
+                            <td>
+                                <input class="viewText" maxlength='10' type="text" th:value="${article.writer}" name="writer" disabled/>
+                                <br>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="viewTextTitle"> 제목 </td>
+                            <td>
+                                <input class="viewText" maxlength='30' type="text" th:value="${article.title}" name="title" disabled/>
+                                <br>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <textarea style="width:100%; height:10em; resize:none;" th:text="${article.content}" name="content" disabled/></textarea>
+                                <br>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="viewModify">
+                    <input type="submit" value="수정" style="float: left;margin-right: 10px;">
+                </div>
+            </form>
+            <input class="viewBack" type="button" value="뒤로가기" onclick="history.go(-1)">
+        </div>
+    </body>
+</html>

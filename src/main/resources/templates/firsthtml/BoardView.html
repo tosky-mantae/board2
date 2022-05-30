@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="../../static/css/BoardTable.css" rel="stylesheet" type="text/css">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div style="margin-right: 30px;margin-left: 30px">
+    <h1>조회페이지</h1>
+    <form  action="/modifyArticlePage" method="post">
+        <input type="hidden" th:value="${article.boardNo}" name="boardNo">
+        <input type="hidden" th:value="${pageNum}" name="pageNum"><br>
+        작성자 : <input style="width:30%;" type="text" th:value="${article.writer}" name="writer" disabled/> <br>
+        제목 : <input style="width:85%;" type="text" th:value="${article.title}" name="title" disabled/> <br>
+        <textarea style="width:100%; height:10em; resize:none;"  th:text="${article.content}" name="content" disabled/></textarea><br>
+        <input type="button" style="float: left;margin-right: 10px;" value="뒤로가기" onclick="history.go(-1)">
+        <input type="submit" value="수정" style="float: left;margin-right: 10px;">
+    </form>
+    <form action="/deleteArticle" method="post">
+        <input type="hidden" th:value="${article.boardNo}" name="boardNo">
+        <input type="hidden" th:value="${pageNum}" name="pageNum">
+        <input type="submit" value="삭제">
+    </form>
+</div>
+</body>
+</html>

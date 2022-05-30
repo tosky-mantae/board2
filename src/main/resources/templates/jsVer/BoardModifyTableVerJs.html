@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <script type="text/javascript" src="js/ttt.js" ></script>
+        <link href="css/BoardTable.css" rel="stylesheet" type="text/css">
+        <title>Title</title>
+    </head>
+    <body>
+        <div class="container">
+            <form action="/modifyArticleDb" method="post" name="articleForm">
+                <input type="hidden" th:value="${article.boardNo}" name="boardNo">
+                <input type="hidden" th:value="${pageNum}" name="pageNum">
+                <table>
+                        <colgroup>
+                            <col style="width: 25%">
+                            <col style="width: 70%">
+                        </colgroup>
+                    <thead>
+                        <tr>
+                            <td colspan="2">
+                                <h1>수정페이지</h1>
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="viewTextTitle"> 작성자 </td>
+                            <td>
+                                <input class="viewText" maxlength='10' type="text" th:value="${article.writer}" name="writer"> <br>
+                                <div name="titleWarning" th:if="${#strings.isEmpty(article.writer)}">작성자를 입력 하세요</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="viewTextTitle"> 제목 </td>
+                            <td>
+                                <input class="viewText"  id="title" maxlength='30' type="text" th:value="${article.title}" name="title"> <br>
+                                <div th:if="${#strings.isEmpty(article.title)}">제목을 입력 하세요</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <textarea style="width:99%; height:10em; resize:none;" th:text="${article.content}" name="content"></textarea><br>
+                                <div th:if="${#strings.isEmpty(article.content)}">내용을 입력 하세요</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+<!--                    <input class="viewModify" type="submit" value="수정" onclick="javascript: modifyCheck();">-->
+                    <input class="viewModify" type="button" value="수정" onclick="javascript: modifyCheck();">
+                    <input class="viewDel" type="button" value="삭제" onclick="javascript: delCheck();">
+                    <input class="viewBack" type="button" value="뒤로가기" onclick="modifyRollBackCheck()">
+            </form>
+<!--            <form type="hidden" action="/deleteArticle" method="post" style="float: left;margin-right: 10px;">-->
+<!--                <div class="viewDel">-->
+<!--                    <input type="hidden" th:value="${article.boardNo}" name="boardNo">-->
+<!--                    <input type="hidden" th:value="${pageNum}" name="pageNum">-->
+<!--                    <input type="submit" value="삭제">-->
+<!--                </div>-->
+<!--            </form>-->
+        </div>
+    </body>
+</html>

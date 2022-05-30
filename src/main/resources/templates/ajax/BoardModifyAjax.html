@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link href="css/BoardTable.css" rel="stylesheet" type="text/css">
+        <title>Title</title>
+<!--        <script type="text/javascript" src="js/modifyJs.js"></script>-->
+        <script type="text/javascript" src="js/jquery/modifyJquery.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <form action="/modifyArticleDb" method="post" name="articleForm">
+                <input type="hidden" name="boardNo" id="boardNo">
+                <input type="hidden" name="pageNum" id="pageNum">
+                <table>
+                        <colgroup>
+                            <col style="width: 25%">
+                            <col style="width: 70%">
+                        </colgroup>
+                    <thead>
+                        <tr>
+                            <td colspan="2">
+                                <h1 id="titleHead">조회페이지</h1>
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="viewTextTitle"> 작성자 </td>
+                            <td>
+                                <input class="viewText viewJquery" maxlength='10' type="text" name="writer" id="writer"> <br>
+                                <div class="exception" id="writerException">작성자를 입력 하세요</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="viewTextTitle"> 제목 </td>
+                            <td>
+                                <input class="viewText viewJquery"   maxlength='30' type="text" name="title" id="title"> <br>
+                                <div class="exception" id="titleException">제목을 입력 하세요</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <textarea class="viewJquery" style="width:99%; height:10em; resize:none;" name="content" id="content"></textarea><br>
+                                <div class="exception" id="contentException">내용을 입력 하세요</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <input class="viewModify modifyShow" id="modifyFinishBtn" type="button" value="수정완료" onclick="modifyCheck()">
+                <input class="viewModify viewShow" id="modifyBtn" type="button" value="수정" onclick="modifyBtnClick()">
+                <input class="viewDel modifyShow" id="delBtn" type="button" value="삭제" onclick="delCheck()">
+                <input class="viewBack modifyShow" id="modifyBackBtn" type="button" value="뒤로가기" onclick="historyBack()">
+                <input class="viewBack viewShow" id="viewBackBtn" type="button" value="뒤로가기" onclick="viewBack()">
+            </form>
+
+        </div>
+    </body>
+</html>

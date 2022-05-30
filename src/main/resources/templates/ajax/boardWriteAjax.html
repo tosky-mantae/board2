@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="css/BoardTable.css" rel="stylesheet" type="text/css">
+    <title>게시글작성 창</title>
+<!--    <script type="text/javascript" src="js/writeJs.js"></script>-->
+    <script type="text/javascript" src="js/jquery/writeJquery.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <form action="/articleWriteDb" method="post" name="articleForm" id="articleForm">
+        <table>
+            <colgroup>
+                <col style="width: 25%">
+                <col style="width: 70%">
+            </colgroup>
+            <thead>
+            <tr>
+                <td colspan="2">
+                    <h1>작성페이지</h1>
+                </td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="viewTextTitle"> 작성자 </td>
+                <td>
+                    <input class="viewText" maxlength='10' type="text" placeholder="작성자를 입력 하세요" id="writer">
+                    <div class="exception" id="writerException">작성자를 입력 하세요</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="viewTextTitle"> 제목 </td>
+                <td>
+                    <input class="viewText" maxlength='30' type="text" placeholder="제목을 입력 하세요" id="title">
+                    <div class="exception" id="titleException">제목을 입력 하세요</div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <textarea style="width:99%; height:10em; resize:none;" placeholder="내용을 입력 하세요" id="content"></textarea>
+                    <div class="exception" id="contentException">내용을 입력 하세요</div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <input class="viewBack" type="button" value="취소" onclick="historyBack()";>
+        <input class="viewModify" type="button" value="등록" onclick="writeCheck()";>
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="css/BoardTable.css" rel="stylesheet" type="text/css">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div style="margin-right: 30px;margin-left: 30px">
+        <h1>수정페이지</h1>
+        <form  action="/modifyArticleDb" method="post">
+            <input type="hidden" th:value="${article.boardNo}" name="boardNo">
+            <input type="hidden" th:value="${pageNum}" name="pageNum"><br>
+            작성자 : <input maxlength='10' style="width:30%;" type="text" th:value="${article.writer}" name="writer"> <br>
+            <div th:if="${#strings.isEmpty(article.writer)}">작성자를 입력 하세요</div>
+            제목 : <input maxlength='30' style="width:85%;" type="text" th:value="${article.title}" name="title">
+            <div th:if="${#strings.isEmpty(article.title)}">제목을 입력 하세요</div> <br>
+            <textarea style="width:100%; height:10em; resize:none;"  th:text="${article.content}" name="content"></textarea>
+            <div th:if="${#strings.isEmpty(article.content)}">내용을 입력 하세요</div> <br>
+            <input type="button" style="float: left;margin-right: 10px;" value="뒤로가기" onclick="history.go(-1)">
+            <input type="submit" value="수정" style="float: left;margin-right: 10px;">
+        </form>
+        <form action="/deleteArticle" method="post" style="float: left;margin-right: 10px;">
+            <input type="hidden" th:value="${article.boardNo}" name="boardNo">
+            <input type="hidden" th:value="${pageNum}" name="pageNum">
+            <input type="submit" value="삭제">
+        </form>
+    </div>
+</body>
+</html>

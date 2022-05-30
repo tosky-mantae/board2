@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link href="css/BoardTable.css" rel="stylesheet" type="text/css">
+        <title>게시글작성 창</title>
+    </head>
+    <body>
+        <div class="container">
+            <form action="/articleWriteDb" method="post">
+                <table>
+                    <colgroup>
+                        <col style="width: 25%">
+                        <col style="width: 70%">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <td colspan="2">
+                                <h1>작성페이지</h1>
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="viewTextTitle"> 작성자 </td>
+                            <td>
+                                <th:block th:if="${#strings.isEmpty(article.writer)}">
+                                    <input class="viewText" maxlength='10' type="text" placeholder="작성자를 입력 하세요" name="writer">
+                                </th:block>
+                                <th:block th:unless="${#strings.isEmpty(article.writer)}">
+                                    <input class="viewText" maxlength='10' type="text" th:value="${article.writer}" name="writer">
+                                </th:block>
+                                <br>
+                                <div th:if="${#strings.isEmpty(article.writer)}and ${countTry}==1">작성자를 입력 하세요</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="viewTextTitle"> 제목 </td>
+                            <td>
+                                <th:block th:if="${#strings.isEmpty(article.title)}">
+                                <input class="viewText" maxlength='30' type="text" placeholder="제목을 입력 하세요" name="title">
+                                </th:block>
+                                <th:block th:unless="${#strings.isEmpty(article.title)}">
+                                    <input class="viewText" maxlength='30' type="text" th:value="${article.title}" name="title">
+                                </th:block>
+                                <br>
+                                <div th:if="${#strings.isEmpty(article.title)}and ${countTry}==1">제목을 입력 하세요</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <th:block th:if="${#strings.isEmpty(article.content)}">
+                                <textarea style="width:99%; height:10em; resize:none;" placeholder="내용을 입력 하세요" name="content"></textarea>
+                                </th:block>
+                                <th:block th:unless="${#strings.isEmpty(article.content)}">
+                                    <textarea style="width:99%; height:10em; resize:none;" th:text="${article.content}"  name="content"></textarea>
+                                </th:block>
+                                <br>
+                                <div th:if="${#strings.isEmpty(article.content)}and ${countTry}==1">내용을 입력 하세요</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="viewModify">
+                    <input type="submit" value="등록" style="float: left;margin-right: 10px;">
+                </div>
+            </form>
+<!--            <form type="hidden" action="/deleteArticle" method="post" style="float: left;margin-right: 10px;">-->
+<!--                <div class="viewDel">-->
+<!--                    <input type="hidden" th:value="${article.boardNo}" name="boardNo">-->
+<!--                    <input type="hidden" th:value="${pageNum}" name="pageNum">-->
+<!--                    <input type="submit" value="삭제">-->
+<!--                </div>-->
+<!--            </form>-->
+            <input class="viewBack" type="button" value="뒤로가기" onclick="history.go(-1)">
+        </div>
+    </body>
+</html>

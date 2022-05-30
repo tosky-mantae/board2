@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<!--    <link href="../static/css/BoardTable.css" rel="stylesheet" type="text/css">-->
+    <link href="css/BoardTable.css" rel="stylesheet" type="text/css">
+    <meta charset="UTF-8">
+    <title>리스트 테이블 버전</title>
+<!--    <script type="text/javascript" src="js/listJs.js"></script>-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript" src="js/jquery/listJquery.js"></script>
+
+</head>
+<body>
+<script>console.log("body start load");</script>
+<div class="fullContainer">
+    <div>
+        <table>
+            <colgroup>
+                <col style="width: 5%">
+                <col style="width: 15%">
+                <col style="width: 50%">
+                <col style="width: 20%">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th colspan="4">
+                        <h1 onclick="searchReset()">게시판목록</h1>
+                    </th>
+                </tr>
+                <tr>
+                    <th class="listArticleHead">글번호</th>
+                    <th class="listArticleHead">작성자</th>
+                    <th class="listArticleHead">제목</th>
+                    <th class="listArticleHead">작성시간</th>
+                </tr>
+            </thead>
+            <tbody id="listTbody">
+                <tr><!--게시글 반복 배열-->
+<!--                  여기에 게시글 배치-->
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div style="text-align: center">
+        <form name="searchArticleForm" id="searchArticleForm" method="post">
+
+            <input type="hidden" id="pageNum" name="pageNum" value="1" >
+
+            <div id="searchNull">검색결과 없음<br>
+                <button  onclick="searchReset();return false;"> 목록으로 </button>
+            </div>
+            <select name="selectComponent" id="selectComponent">
+                <option value="all">제목 + 작성자</option>
+                <option value="title">제목</option>
+                <option value="writer">작성자</option>
+            </select>
+            <input type="text" id="searchKeyword" name="searchKeyword">
+            <button onclick="searchSet();return false;">검색</button>
+        </form>
+        <form class="listAddButton" action="/articleWritePageAjaxView" method="post">
+            <input type="hidden" id="listAddButton">
+            <button type="submit">게시글 등록</button>
+        </form>
+    </div>
+    <div style="text-align: center;">
+        <ul style="display: inline-block;">
+            <li>
+                <button id="firstPageBtn" onclick="movePage($('#firstPageBtn').val())"> 첫페이지 </button>
+            </li>
+            <li>
+                <button id="prevPageBtn" onclick="movePage($('#prevPageBtn').val())"> 이전 페이지 </button>
+            </li>
+
+            <li id="pageGroup">
+<!--                <a th:if="${searchKeyword}!=null" th:href="@{/list(pageNum=${pageGroupList},selectComponent=${selectComponent},searchKeyword=${searchKeyword})}" th:text="${pageGroupList}"></a>-->
+<!--                <a th:if="${searchKeyword}==null" th:href="@{/list(pageNum=${pageGroupList})}" th:text="${pageGroupList}"></a>-->
+            </li>
+
+            <li>
+                <button id="nextPageBtn" onclick="movePage($('#nextPageBtn').val())"> 다음 페이지 </button>
+            </li>
+            <li>
+                <button id="lastPageBtn" onclick="movePage($('#lastPageBtn').val())"> 마지막 페이지 </button>
+            </li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

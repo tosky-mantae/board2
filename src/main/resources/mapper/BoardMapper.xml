@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tosky.board2.dao.BoardMapper">
+
+    <insert id="writeBoardArticle" parameterType="map">
+        insert into board ( title, content, writer) VALUE (#{title}, #{content}, #{writer})
+    </insert>
+
+    <update id="modifyArticle" parameterType="map" >
+        UPDATE board
+        set title = #{title}, content = #{content}, writer = #{writer}
+        where boardNo=#{boardNo};
+    </update>
+
+    <delete id="deleteArticle" parameterType="map">
+        delete from board
+        where boardNo=#{boardNo};
+    </delete>
+
+    <select id="getAllBoardData" parameterType="map" resultType="map">
+        SELECT title,regDate,writer,boardNo FROM board
+<!--             where 1=1-->
+<!--                <if test="selectComponent == 'title'">and title like concat("%",#{searchKeyword},"%")</if>-->
+<!--                <if test="selectComponent == 'writer'">and writer like concat("%",#{searchKeyword},"%")</if>-->
+<!--            ORDER by boardNo desc LIMIT #{pageView} offset #{pageOffset}-->
+        <where>
+            <choose>
+                <when test="selectComponent == 'writer'">
+                    writer like concat ("%",#{searchKeyword},"%")
+                </when>
+                <when test="selectComponent == 'title'">
+                    title like concat ("%",#{searchKeyword},"%")
+                </when>
+                <when test="selectComponent == 'all'">
+                    title like concat ("%",#{searchKeyword},"%") or writer like concat ("%",#{searchKeyword},"%")
+                </when>
+            </choose>
+        </where>
+            ORDER by boardNo desc LIMIT #{pageView} offset #{pageOffset};
+    </select>
+
+    <select id="articleTotalCount" parameterType="map" resultType="int">
+        select count(*) from board
+            <choose>
+                <when test="selectComponent == 'writer'">
+                    where writer like concat ("%",#{searchKeyword},"%")
+                </when>
+                <when test="selectComponent == 'title'">
+                    where title like concat ("%",#{searchKeyword},"%")
+                </when>
+                <when test="selectComponent == 'all'">
+                    where title like concat ("%",#{searchKeyword},"%") or writer like concat ("%",#{searchKeyword},"%")
+                </when>
+            </choose>;
+    </select>
+
+    <select id="getViewArticle" parameterType="int" resultType="map">
+        SELECT title,content,writer,boardNo FROM board where boardNo = #{boardNo}
+    </select>
+
+    <select id="getViewArticle2" parameterType="int" resultType="map">
+        SELECT title,content,writer,boardNo FROM board where boardNo = #{boardNo}
+    </select>
+<!--    <select id="searchArticle" parameterType="map" resultType="map">-->
+<!--        select * from board-->
+<!--                 if() {-->
+<!--                 where #{selectComponent} like concat ("%",#{searchKeyWord},"%");-->
+<!--                }-->
+<!--    </select>-->
+
+</mapper>

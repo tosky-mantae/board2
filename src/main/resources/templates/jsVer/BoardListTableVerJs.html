@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<!--    <link href="../static/css/BoardTable.css" rel="stylesheet" type="text/css">-->
+    <link href="css/BoardTable.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="js/ttt.js" ></script>
+    <meta charset="UTF-8">
+    <title>리스트 테이블 버전</title>
+</head>
+    <body>
+        <div class="fullContainer">
+            <div>
+                <table>
+                    <colgroup>
+                        <col style="width: 5%">
+                        <col style="width: 15%">
+                        <col style="width: 50%">
+                        <col style="width: 20%">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th colspan="4"><h1>게시판목록</h1></th>
+                        </tr>
+                        <tr>
+                            <th class="listArticleHead">글번호</th>
+                            <th class="listArticleHead">작성자</th>
+                            <th class="listArticleHead">제목</th>
+                            <th class="listArticleHead">작성시간</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="article, i: ${articles}">
+                            <td th:hidden="${article.boardNo}"></td>
+                            <td class="listArticle" th:text="((${articleTotalCount}-${i.index})-(${pageNum}-1)*${pageView})"></td>
+                            <td class="listArticle" th:text="${article.writer}"></td>
+                            <td class="listArticle">
+                                <a style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" th:href="@{viewArticle(boardNo=${article.boardNo},pageNum=${pageNum})}" th:text="${article.title}"></a>
+                            </td>
+                            <td class="listArticle" th:text="${article.regDate}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div style="text-align: center">
+                <form name="searchArticleForm" acrion="/list" method="get">
+                    <div th:if="${searchNull}==1">검색결과 없음<br>
+                        <a href="/list?pageNum=1">목록으로</a>
+                    </div>
+                    <input type="hidden" name="pageNum" th:value=1>
+                    <select name="selectComponent" th:value="${selectComponent}">
+                        <option th:selected="${selectComponent}=='all'" value="all">제목 + 작성자</option>
+                        <option th:selected="${selectComponent}=='title'" value="title">제목</option>
+                        <option th:selected="${selectComponent}=='writer'" value="writer">작성자</option>
+                    </select>
+                    <input type="text" name="searchKeyword" th:value="${searchKeyword}">
+                    <button type="submit">검색</button>
+                </form>
+                <form class="listAddButton" action="/articleWritePage" method="post">
+<!--                    <button th:if="" name="searchBack"-->
+                    <input type="hidden" name="pageNum" th:value="${pageNum}">
+                    <button type="submit">게시글 등록</button>
+                </form>
+            </div>
+            <div style="text-align: center;">
+                <ul style="display: inline-block;">
+                    <li th:if="${pageNum}!=1">
+                        [<a th:href="@{/list(pageNum=1)}" th:text="첫페이지"></a>]
+                    </li>
+                    <li th:if="${pagingGroupStartNum}>${pagingGroupCountInt}">
+                        [<a th:href="@{/list(pageNum=(${pagingGroupStartNum}-1))}" th:text="이전페이지"></a>]
+                    </li>
+                    <li th:each="pageGroupList:${pageGroupList}">
+                        <a th:if="${searchKeyword}!=null" th:href="@{/list(pageNum=${pageGroupList},selectComponent=${selectComponent},searchKeyword=${searchKeyword})}" th:text="${pageGroupList}"></a>
+                        <a th:if="${searchKeyword}==null" th:href="@{/list(pageNum=${pageGroupList})}" th:text="${pageGroupList}"></a>
+                    </li>
+                    <li th:if="(${pagingGroupStartNum}-1+${pagingGroupCountInt})!=${pagingEndNum}">
+                        [<a th:href="@{/list(pageNum=(${pagingGroupStartNum}+${pagingGroupCountInt}))}" th:text="다음페이지"></a>]
+                    </li>
+                    <li th:if="${pageNum}!=${pageCount}">
+                        [<a th:href="@{/list(pageNum=${pageCount})}" th:text="끝페이지"></a>]
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </body>
+</html>
