@@ -2,13 +2,13 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 <!--    <link href="../static/css/BoardTable.css" rel="stylesheet" type="text/css">-->
-    <link href="css/BoardTable.css" rel="stylesheet" type="text/css">
+
     <meta charset="UTF-8">
     <title>리스트 테이블 버전</title>
 <!--    <script type="text/javascript" src="js/listJs.js"></script>-->
+    <link href="css/BoardTable.css" rel="stylesheet" type="text/css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script type="text/javascript" src="js/jquery/listJquery.js"></script>
-
 </head>
 <body>
 <script>console.log("body start load");</script>
@@ -24,7 +24,10 @@
             <thead>
                 <tr>
                     <th colspan="4">
+
+
                         <h1 onclick="searchReset()">게시판목록</h1>
+                        <button type="button" id="signUpBtn" onclick="location.href='/userSignUpPageAjaxView'"> 회원가입 </button>
                     </th>
                 </tr>
                 <tr>

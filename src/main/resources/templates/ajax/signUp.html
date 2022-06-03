@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="css/BoardTable.css" rel="stylesheet" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript" src="js/jquery/signUp.js"></script>
+    <title>회원가입</title>
+</head>
+<body>
+    <div class="container">
+        <table class="tg">
+            <thead>
+                <tr>
+                    <th class="tg-0pky" colspan="2"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        id
+                    </td>
+                    <td>
+                        <input id="userId" type="text">
+                    </td>
+                </tr>
+                <tr>
+                    <td>pw</td>
+                    <td>
+                        <input id="userPw" type="password">
+                    </td>
+                </tr>
+                <tr>
+                    <td>rePw</td>
+                    <td>
+                        <input id="rePw" type="password"><br>
+                        <span id="pwCheck">비밀번호를 확인하세요.</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>tel</td>
+                    <td>
+                        <input id="userTel" type="tel"><br>
+                        <span id="telCheck">잘못된 양식입니다.</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="button" onclick="signUpCheckAjax()" value="등록">
+                    </td>
+                    <td>
+                        <input type="button" onclick="historyBack()" value="취소">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

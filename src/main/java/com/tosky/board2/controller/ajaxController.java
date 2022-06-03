@@ -241,5 +241,77 @@ public class ajaxController {
         // 목록으로 redirect
         return deleteResult;
     }
+    @PostMapping("/signUpCheck")  //게시물 삭제 로직 실행
+    public Map<String, Object> signUpCheck(HttpServletRequest request, HttpServletResponse response, Model model) {
+
+        String userId = request.getParameter("userId");
+
+        Map<String, Object> signUpCheck = new HashMap<>();
+
+        signUpCheck.put("userId",userId);
+
+        int result = boardService.signUpCheck(signUpCheck);
+        String resultCode;
+
+        if (result == 0){
+            resultCode = "success";
+        }else{
+            resultCode = "fail";
+        }
+
+        Map<String, Object> signUpCheckResult = new HashMap<>();
+
+        signUpCheckResult.put("code",resultCode);
+
+
+        // 목록으로 redirect
+        return signUpCheckResult;
+    }
+    @PostMapping("/signUp")  //게시물 삭제 로직 실행
+    public Map<String, Object> signUp(HttpServletRequest request, HttpServletResponse response, Model model) {
+
+        String userId = request.getParameter("userId");
+        String userPw = request.getParameter("userPw");
+        String userTel = request.getParameter("userTel");
+
+        Map<String, Object> signUpArticle = new HashMap<>();
+
+        signUpArticle.put("userId",userId);
+        signUpArticle.put("userPw",userPw);
+        signUpArticle.put("userTel",userTel);
+
+        int result = boardService.signUp(signUpArticle);
+
+        Map<String, Object> signUpResult = new HashMap<>();
+
+        // 목록으로 redirect
+        return signUpResult;
+    }
+    @PostMapping("/login")  //게시물 삭제 로직 실행
+    public Map<String, Object> login(HttpServletRequest request, HttpServletResponse response, Model model) {
+
+        String userId = request.getParameter("userId");
+        String userPw = request.getParameter("userPw");
+
+        Map<String, Object> loginArticle = new HashMap<>();
+
+        loginArticle.put("userId",userId);
+        loginArticle.put("userPw",userPw);
+
+        int result = boardService.loginCheck(loginArticle);
+        String resultCode;
+
+        if (result == 1){
+            resultCode = "success";
+        }else{
+            resultCode = "fail";
+        }
+
+        Map<String, Object> loginResult = new HashMap<>();
+        loginResult.put("code",resultCode);
+
+        // 목록으로 redirect
+        return loginResult;
+    }
 
 }

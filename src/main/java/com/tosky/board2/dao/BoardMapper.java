@@ -22,6 +22,12 @@ public interface BoardMapper {
 
     public int articleTotalCount(Map<String,Object>param);
 
+    public int signUp(Map<String,Object> param);
+
+    public int signUpCheck(Map<String,Object>param);
+
+    public int loginCheck(Map<String,Object>param);
+
     public Map<String,String> getViewArticle(int boardNo);
     public Map<String,Object> getViewArticle2(int boardNo);
 

@@ -32,8 +32,6 @@ function ajaxGetList() {
             let pageNum = json.pageNum;     // 현재 페이지 번호
             let pageView = json.pageView;   // 페이지당 게시물 수
 
-            var tbody = document.getElementById("listTbody");
-
             $("#listTbody").html("");
             let row = ""
             for(let i = 0; i < list.length; i++) {

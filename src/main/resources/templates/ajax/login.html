@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="css/BoardTable.css" rel="stylesheet" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript" src="js/jquery/login.js"></script>
+    <title>로그인</title>
+</head>
+
+<body class="">
+    <div class="container">
+        <table>
+            <thead>
+                <tr>
+                    <th colspan="2">
+                        <span>Login Page</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>id</td>
+                    <td>
+                        <input id="userId" type="text">
+                    </td>
+                </tr>
+                <tr>
+                    <td>pw</td>
+                    <td>
+                        <input id="userPw" type="password">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button id="signUpBtn" onclick="location.href='/userSignUpPageAjaxView'">회원가입</button>
+                    </td>
+                    <td>
+                        <button id="loginBtn" onclick="loginCheck()">로그인</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>

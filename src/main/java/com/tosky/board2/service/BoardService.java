@@ -49,6 +49,21 @@ public class BoardService {
         Map<String,String> viewData = boardMapper.getViewArticle(boardNo);
         return viewData;
     }
+
+    public int signUp(Map<String, Object> param) {
+        int result = boardMapper.signUp(param);
+        return result;
+    }
+
+    public int signUpCheck(Map<String,Object>param) {
+        int result = boardMapper.signUpCheck(param);
+        return result;
+    }
+    public int loginCheck(Map<String,Object>param) {
+        int result = boardMapper.loginCheck(param);
+        return result;
+    }
+
     public Map<String,Object> getViewArticle2(int boardNo) {
         Map<String,Object> viewData = boardMapper.getViewArticle2(boardNo);
         return viewData;

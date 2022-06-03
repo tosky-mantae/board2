@@ -56,6 +56,20 @@
             </choose>;
     </select>
 
+    <insert id="signUp" parameterType="map">
+        insert into user ( userId, userPassWord, userTel) VALUE (#{userId}, #{userPw}, #{userTel})
+    </insert>
+
+    <select id="signUpCheck" parameterType="map" resultType="Int">
+        SELECT count(*) FROM user where userId like #{userId};
+    </select>
+
+    <select id="loginCheck" parameterType="map" resultType="Int">
+        SELECT count(*) FROM user where userId = #{userId} and userPassWord = #{userPw};
+    </select>
+
+
+
     <select id="getViewArticle" parameterType="int" resultType="map">
         SELECT title,content,writer,boardNo FROM board where boardNo = #{boardNo}
     </select>

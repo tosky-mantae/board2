@@ -375,5 +375,15 @@ public class BoardController {
 
         return "ajax/BoardModifyAjax";
     }
+    @GetMapping(value = "/userSignUpPageAjaxView")  //
+    public String userSignUpPageAjaxView(HttpServletRequest request, HttpServletResponse response, Model model) {
+
+        return "ajax/signUp";
+    }
+    @GetMapping(value = "/")  //
+    public String login(HttpServletRequest request, HttpServletResponse response, Model model) {
+
+        return "ajax/login";
+    }
 
 }
