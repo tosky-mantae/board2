@@ -26,10 +26,11 @@ public interface BoardMapper {
 
     public int signUpCheck(Map<String,Object>param);
 
-    public int loginCheck(Map<String,Object>param);
+    public Map<String,Object> loginCheck(Map<String,Object>param);
 
     public Map<String,String> getViewArticle(int boardNo);
-    public Map<String,Object> getViewArticle2(int boardNo);
 
-    public List<Map<String,String>> searchArticle (Map<String,String>param);
+    public Map<String,String> getViewArticlePwCheck(int boardNo);
+
+    public Map<String,String> pwJoinData(int boardNo);
 }

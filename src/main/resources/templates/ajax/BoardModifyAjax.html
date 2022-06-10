@@ -9,10 +9,18 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     </head>
     <body>
+        <div class="modal">
+            <div class="modal_content">
+                <input id="pwInput" type="password" maxlength="10">
+                <input id="pwCheckBtn" type="button" value="확인" onclick="">
+                <input type="button" value="취소" onclick="viewBack()">
+            </div>
+        </div>
         <div class="container">
             <form action="/modifyArticleDb" method="post" name="articleForm">
                 <input type="hidden" name="boardNo" id="boardNo">
                 <input type="hidden" name="pageNum" id="pageNum">
+                <input type="hidden" name="isSecretNum" id="isSecretNum">
                 <table>
                         <colgroup>
                             <col style="width: 25%">
@@ -26,6 +34,16 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <tr>
+                            <td>
+                                <!--                        <input name="secretCheck" type="radio" value="0" onclick="secretOpenArticle()" checked>공개글-->
+                                <!--                        <input name="secretCheck" type="radio" value="1" onclick="secretSecretArticle()">비밀글-->
+                                <input id="secretCheck" class="viewJquery" type="checkbox" onclick="secretSecretArticle()">비밀글
+                            </td>
+                            <td class="articlePwArea">
+                                <input id="articlePw" class="viewJquery" type="password" disabled="true" maxlength="8" placeholder="비밀번호" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                            </td>
+                        </tr>
                         <tr>
                             <td class="viewTextTitle"> 작성자 </td>
                             <td>

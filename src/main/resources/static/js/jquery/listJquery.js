@@ -48,6 +48,16 @@ function ajaxGetList() {
                 // 제목에 앵커 링크 추가
                 $("#titleAnchor" + i ).attr("href","modifyArticlePageAjax?boardNo=" + list[i].boardNo + "&pageNum=" + pageNum);
 
+                //게시글이 비밀글일경우 아이콘 추가
+                if(list[i].isSecret == true){
+                    $("#titleAnchor" + i ).append($("<img>").attr("class","secretIcon"));
+                    $(".secretIcon").attr({
+                        src : "/img/secretIcon.png",
+                        width : "20px" ,
+                        height : "20px"
+                    })
+                }
+
                 // td 내용 리셋
                 row = ""
                 };
@@ -150,4 +160,20 @@ function movePage(x) {
 function searchSet() {
     document.getElementById('pageNum').value = 1;
     ajaxGetList();
+}
+
+function secretImgSet() {
+
+    let x = document.createElement("IMG");
+
+    x.setAttribute("src", "secretIcon.png");
+
+    x.setAttribute("width", "304");
+
+    x.setAttribute("height", "228");
+
+    x.setAttribute("alt", "랜덤짤");
+
+    document.body.appendChild(x);
+
 }

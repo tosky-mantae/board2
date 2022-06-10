@@ -8,6 +8,13 @@ window.onload = function() {
 };
 
 function writeAjax() {
+
+    let isSecretCheck;
+    if($('input:checkbox[id="secretCheck"]').is(":checked") == true) {
+        isSecretCheck = 1;
+    }else{
+        isSecretCheck = 0;
+    }
     $.ajax({
         url :'http://localhost:8080/articleWriteDbAjax',    // 요청 할 주소
         async : true,       // false 일 경우 동기 요청으로 변경
@@ -15,16 +22,20 @@ function writeAjax() {
         data : {
             writer : $("#writer").val(),
             title : $("#title").val(),
-            content : $("#content").val()
+            content : $("#content").val(),
+            secretCheck : isSecretCheck,
+            articlePw : $("#articlePw").val()
         },      // 전송할 데이터
         dataType : "json",        // xml, json, script, html
         beforeSend : function() {},         // 서버 요청 전 호출 되는 함수 return false; 일 경우 요청 중단
         success : function(json) {
-            if(json.code == 33) {           // Result Code / 1 : 성공, 33 : 예외처리
+            if(json.code == "textError") {           // Result Code / 1 : 성공, 33 : 예외처리
                 alert("빈칸없이 작성하시오.");
-            } else if(json.code == 1) {     // Result Code / 1 : 성공, 33 : 예외처리
+            } else if(json.code == "success") {     // Result Code / 1 : 성공, 33 : 예외처리
                 alert("등록완료!");
                 location.href = "/listAjaxTest";
+            }else if(json.code == "newPwWrong"){
+                alert("비밀번호는 4-8자리 만 가능.");
             }
         },      // 요청 완료 시
         error : function() {},      // 요청 실패
@@ -50,6 +61,18 @@ function writeCheck() {
         $("#contentException").css("display" , "");
     }
 
+    let isSecretCheck;
+    if($('input:checkbox[id="secretCheck"]').is(":checked") == true) {
+        isSecretCheck = 1;
+    }else{
+        isSecretCheck = 0;
+    }
+
+    if(isSecretCheck == 1 && $("#articlePw").val().length < 4) {
+        alert("비밀번호는 4-8글자의 숫자만 입력 가능합니다")
+        return false;
+    }
+
     if(confirm("등록 하시겠습니까?")) {
         writeAjax();
     } else {
@@ -64,3 +87,21 @@ function historyBack() {
 
     }
 };
+    //라디오일경우 사용 함수
+// function secretOpenArticle() {       //공개글 선택시 비밀번호입력창 비운후 비활성화
+//     $("#articlePw").val("");
+//     $("#articlePw").attr("disabled" , true);
+// };
+// function secretSecretArticle() {     //비밀글 선택시 비밀번호 입력창 활성화
+//     $("#articlePw").attr("disabled" , false);
+// };
+function secretSecretArticle() {
+    if($('input:checkbox[id="secretCheck"]').is(":checked") == true) {
+        $("#articlePw").attr("disabled" , false);
+    } else{
+        $("#articlePw").val("");
+        $("#articlePw").attr("disabled" , true);
+    }
+};
+
+// $('input:checkbox[name="secretCheck"]').is(":checked") == true;

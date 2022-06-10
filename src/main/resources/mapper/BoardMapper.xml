@@ -5,12 +5,15 @@
 <mapper namespace="com.tosky.board2.dao.BoardMapper">
 
     <insert id="writeBoardArticle" parameterType="map">
-        insert into board ( title, content, writer) VALUE (#{title}, #{content}, #{writer})
+        insert into board ( title, content, writer, isSecret, articlePassword) VALUE (#{title}, #{content}, #{writer}, #{secretCheck}, #{articlePw})
     </insert>
 
     <update id="modifyArticle" parameterType="map" >
         UPDATE board
         set title = #{title}, content = #{content}, writer = #{writer}
+         <if test="secretCheck != null">
+            , isSecret = #{secretCheck}, articlePassword = #{articlePw}
+         </if>
         where boardNo=#{boardNo};
     </update>
 
@@ -20,11 +23,7 @@
     </delete>
 
     <select id="getAllBoardData" parameterType="map" resultType="map">
-        SELECT title,regDate,writer,boardNo FROM board
-<!--             where 1=1-->
-<!--                <if test="selectComponent == 'title'">and title like concat("%",#{searchKeyword},"%")</if>-->
-<!--                <if test="selectComponent == 'writer'">and writer like concat("%",#{searchKeyword},"%")</if>-->
-<!--            ORDER by boardNo desc LIMIT #{pageView} offset #{pageOffset}-->
+        SELECT title,regDate,writer,boardNo,isSecret FROM board
         <where>
             <choose>
                 <when test="selectComponent == 'writer'">
@@ -64,24 +63,25 @@
         SELECT count(*) FROM user where userId like #{userId};
     </select>
 
-    <select id="loginCheck" parameterType="map" resultType="Int">
-        SELECT count(*) FROM user where userId = #{userId} and userPassWord = #{userPw};
+    <select id="loginCheck" parameterType="map" resultType="map">
+        SELECT userPassWord FROM user where userId = #{userId};
     </select>
 
-
-
     <select id="getViewArticle" parameterType="int" resultType="map">
-        SELECT title,content,writer,boardNo FROM board where boardNo = #{boardNo}
+        SELECT title,content,writer,boardNo, articlePassword, isSecret FROM board where boardNo = #{boardNo}
+    </select>
+
+    <select id="getViewArticlePwCheck" parameterType="int" resultType="map">
+        SELECT isSecret FROM board where boardNo = #{boardNo}
+    </select>
+
+    <select id="pwJoinData" parameterType="int" resultType="map">
+        SELECT articlePassword FROM board where boardNo = #{boardNo}
     </select>
 
     <select id="getViewArticle2" parameterType="int" resultType="map">
         SELECT title,content,writer,boardNo FROM board where boardNo = #{boardNo}
     </select>
-<!--    <select id="searchArticle" parameterType="map" resultType="map">-->
-<!--        select * from board-->
-<!--                 if() {-->
-<!--                 where #{selectComponent} like concat ("%",#{searchKeyWord},"%");-->
-<!--                }-->
-<!--    </select>-->
+
 
 </mapper>

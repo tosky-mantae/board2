@@ -50,6 +50,16 @@ public class BoardService {
         return viewData;
     }
 
+    public Map<String,String> getViewArticlePwCheck(int boardNo) {
+        Map<String,String> viewData = boardMapper.getViewArticlePwCheck(boardNo);
+        return viewData;
+    }
+
+    public Map<String,String> pwJoinData(int boardNo) {
+        Map<String,String> viewData = boardMapper.pwJoinData(boardNo);
+        return viewData;
+    }
+
     public int signUp(Map<String, Object> param) {
         int result = boardMapper.signUp(param);
         return result;
@@ -59,18 +69,8 @@ public class BoardService {
         int result = boardMapper.signUpCheck(param);
         return result;
     }
-    public int loginCheck(Map<String,Object>param) {
-        int result = boardMapper.loginCheck(param);
+    public Map<String,Object> loginCheck(Map<String,Object>param) {
+        Map<String,Object> result = boardMapper.loginCheck(param);
         return result;
-    }
-
-    public Map<String,Object> getViewArticle2(int boardNo) {
-        Map<String,Object> viewData = boardMapper.getViewArticle2(boardNo);
-        return viewData;
-    }
-
-    public List<Map<String,String>> searchArticle(Map<String, String> param){
-        List<Map<String,String>> searchReturn = boardMapper.searchArticle(param);
-        return searchReturn;
     }
 }

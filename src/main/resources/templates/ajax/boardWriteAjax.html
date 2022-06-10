@@ -24,26 +24,36 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td class="viewTextTitle"> 작성자 </td>
-                <td>
-                    <input class="viewText" maxlength='10' type="text" placeholder="작성자를 입력 하세요" id="writer">
-                    <div class="exception" id="writerException">작성자를 입력 하세요</div>
-                </td>
-            </tr>
-            <tr>
-                <td class="viewTextTitle"> 제목 </td>
-                <td>
-                    <input class="viewText" maxlength='30' type="text" placeholder="제목을 입력 하세요" id="title">
-                    <div class="exception" id="titleException">제목을 입력 하세요</div>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <textarea style="width:99%; height:10em; resize:none;" placeholder="내용을 입력 하세요" id="content"></textarea>
-                    <div class="exception" id="contentException">내용을 입력 하세요</div>
-                </td>
-            </tr>
+                <tr>
+                    <td>
+<!--                        <input name="secretCheck" type="radio" value="0" onclick="secretOpenArticle()" checked>공개글-->
+<!--                        <input name="secretCheck" type="radio" value="1" onclick="secretSecretArticle()">비밀글-->
+                        <input id="secretCheck" type="checkbox" onclick="secretSecretArticle()">비밀글
+                    </td>
+                    <td class="articlePwArea">
+                        <input id="articlePw" type="password" disabled="true" maxlength="8" placeholder="비밀번호" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="viewTextTitle"> 작성자 </td>
+                    <td>
+                        <input class="viewText" maxlength='10' type="text" placeholder="작성자를 입력 하세요" id="writer">
+                        <div class="exception" id="writerException">작성자를 입력 하세요</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="viewTextTitle"> 제목 </td>
+                    <td>
+                        <input class="viewText" maxlength='30' type="text" placeholder="제목을 입력 하세요" id="title">
+                        <div class="exception" id="titleException">제목을 입력 하세요</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <textarea style="width:99%; height:10em; resize:none;" placeholder="내용을 입력 하세요" id="content"></textarea>
+                        <div class="exception" id="contentException">내용을 입력 하세요</div>
+                    </td>
+                </tr>
             </tbody>
         </table>
         <input class="viewBack" type="button" value="취소" onclick="historyBack()";>
