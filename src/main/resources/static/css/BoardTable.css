@@ -17,6 +17,12 @@ table{
     width: 100%;
     table-layout: fixed;
 }
+form{
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    table-layout: fixed;
+}
 td{
     height: 40px;
     text-align: center;
@@ -93,4 +99,58 @@ h1{
 
 .articlePwArea{
     text-align: left; margin-left: 5px;
+}
+
+.sessionArea{
+    text-align: right; margin-right: 5px;
+}
+
+.loginBody {
+    justify-content: center;
+    align-items: center;
+}
+
+.login-form{
+    font-size: 32px;
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.int-area {
+    width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+}
+
+.int-area:first-child {
+    margin-top: 0;
+}
+
+.int-area input {
+    width: 100%;
+    padding: 20px 10px 10px;
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid black;
+    font-size: 18px;
+    outline: none;
+}
+.signUpBtn{
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    text-align: center;
+}
+.loginBtn{
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+}
+.frm{
+    text-align: center;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
 }

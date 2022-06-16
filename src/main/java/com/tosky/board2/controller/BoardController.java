@@ -10,6 +10,7 @@ import org.thymeleaf.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.security.Principal;
 import java.util.*;
 
 import static com.tosky.board2.util.Utility.strToInt;
@@ -342,7 +343,18 @@ public class BoardController {
 //    }
 
     @PostMapping(value = "/articleWritePageAjaxView")  //게시물 등록 html 이동
-    public String articleWritePageAjaxView(HttpServletRequest request, HttpServletResponse response, Model model) {
+    public String articleWritePageAjaxView(Principal principal, HttpServletRequest request, HttpServletResponse response, Model model) {
+
+        // ajax 리턴값 맵선언
+        Map<String, Object> result = new HashMap<>();
+
+        //세션 정보 확인
+        String sessionInfo = "not login";
+        if (principal != null) {
+            sessionInfo = principal.getName();
+        }
+        model.addAttribute("userId",sessionInfo);
+
 
         return "ajax/boardWriteAjax";
     }

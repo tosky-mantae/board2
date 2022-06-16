@@ -112,16 +112,13 @@ public class ajaxController {
                 break;
             }
         }
-//todo 메모장에있는거 구현할방법 생각해보기
-//        String userinfo = principal.getName();
-//        if(userinfo == null) {
-//            System.out.println("없음");
-//        }
-//        System.out.println(userinfo);
 
+        //세션 정보 확인
+        String sessionInfo = "not login";
+        String session = "null";
         if (principal != null) {
-            System.out.println("타입정보 : " + principal.getClass());
-            System.out.println("ID정보 : " + principal.getName());
+            sessionInfo = principal.getName();
+            session = "use";
         }
 
         //json을 위한 맵
@@ -138,17 +135,18 @@ public class ajaxController {
         listArticle.put("articleTotalCount", articleTotalCount);
         listArticle.put("pageView", pageView);
         listArticle.put("articles", result);
+        listArticle.put("sessionInfo", sessionInfo);
+        listArticle.put("session", session);
 
         return listArticle;
     }
 
 
     @PostMapping(value = "/articleWriteDbAjax")  //게시물 등록 로직 실행
-    public Map<String, Object> articleWriteDb(HttpServletRequest request, HttpServletResponse response, Model model){
+    public Map<String, Object> articleWriteDb(Principal principal,HttpServletRequest request, HttpServletResponse response, Model model){
 
         // html에서 정보 받아와 변수 저장
         String title = request.getParameter("title");
-        String writer = request.getParameter("writer");
         String content = request.getParameter("content");
         int secretCheck = Integer.parseInt(request.getParameter("secretCheck"));
         String userPw = request.getParameter("articlePw");
@@ -159,16 +157,29 @@ public class ajaxController {
         } else {
             isSecret = false;
         }
+        // ajax 리턴값 맵선언
+        Map<String, Object> result = new HashMap<>();
+
+        //세션 정보 확인
+        String sessionInfo = "not login";
+        String session = "null";
+        if (principal != null) {
+            sessionInfo = principal.getName();
+            session = "use";
+        }
+        if(session.equals("null")) {
+            result.put("code","잘못된 접근입니다");
+            return result;
+        }
 
         // db전달 인자 맵형식으로 저장
         Map<String, Object> article = new HashMap<String, Object>();
         article.put("title", title);
-        article.put("writer", writer);
+        article.put("writer", sessionInfo);
         article.put("content", content);
         article.put("secretCheck", secretCheck);
 
-        // ajax 리턴값 맵선언
-        Map<String, Object> result = new HashMap<>();
+
 
         if(isSecret){                                           //비밀글 선택시
             if(userPw.length() >= 4 && userPw.length() <= 8){   //비밀번호 자릿수 검사
@@ -180,7 +191,7 @@ public class ajaxController {
         }
 
         // 예외처리 문자열 공백 검사
-        if(content.isBlank() || writer.isBlank() || title.isBlank()) {
+        if(content.isBlank() || title.isBlank()) {
             result.put("code","빈칸없이 작성하시오.");     //공백이있을경우 텍스트에러 입력
         } else {
             // 서비스단으로 이동
@@ -193,7 +204,36 @@ public class ajaxController {
     }
 
     @PostMapping("/viewArticlePageAjax")   //게시물 조회 로직 실행
-    public Map<String, Object> viewArticlePageAjax(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+    public Map<String, Object> viewArticlePageAjax(Principal principal,HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+
+        int boardNo = Integer.parseInt(request.getParameter("boardNo"));
+
+        //게시물 번호를 인자로 담아 조회해온 게시글을 리스트<맵>형식으로 html에 전달
+        Map<String, Object> viewData = new HashMap<>();
+        viewData = boardService.getViewArticle(boardNo);
+
+        //세션 정보 확인
+        String sessionInfo = "not login";
+        String session = "null";
+        if (principal != null) {
+            sessionInfo = principal.getName();
+            session = "use";
+        }
+
+        //기존페이지 저장
+        int rollBackPage = Integer.parseInt(request.getParameter("pageNum"));
+
+        Map<String,Object>viweResult = new HashMap<String,Object>();
+        viweResult.put("article", viewData);
+        viweResult.put("pageNum", rollBackPage);
+        viweResult.put("session", session);
+        viweResult.put("sessionInfo", sessionInfo);
+
+        return viweResult;
+    }
+
+    @PostMapping("/secretCheckAjax")   //비밀글 체크 로직
+    public Map<String, Object> secretCheckAjax(Principal principal, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 
         int boardNo = Integer.parseInt(request.getParameter("boardNo"));
 
@@ -204,27 +244,30 @@ public class ajaxController {
         //기존페이지 저장
         int rollBackPage = Integer.parseInt(request.getParameter("pageNum"));
 
+        //세션 정보 확인
+        String sessionInfo = "not login";
+        String session = "null";
+        if(principal != null) {
+            sessionInfo = principal.getName();
+            session = "use";
+        }
+
+        Boolean isSecret = (Boolean) viewData.get("isSecret");
+        String writer = (String) viewData.get("writer");
+
+        String result = "";
+        if(isSecret) {
+            if(writer.equals(sessionInfo)) {
+                result = "공개";
+            } else {
+                result = "비밀";
+            }
+        } else {
+            result = "공개";
+        }
+
         Map<String,Object>modifyResult = new HashMap<String,Object>();
-        modifyResult.put("article", viewData);
-        modifyResult.put("pageNum", rollBackPage);
-
-        return modifyResult;
-    }
-
-    @PostMapping("/secretCheckAjax")   //비밀글 체크 로직
-    public Map<String, Object> secretCheckAjax(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
-
-        int boardNo = Integer.parseInt(request.getParameter("boardNo"));
-
-        //게시물 번호를 인자로 담아 조회해온 게시글을 리스트<맵>형식으로 html에 전달
-        Map<String, Object> pwCheckData = new HashMap<>();
-        pwCheckData = boardService.getViewArticlePwCheck(boardNo);
-
-        //기존페이지 저장
-        int rollBackPage = Integer.parseInt(request.getParameter("pageNum"));
-
-        Map<String,Object>modifyResult = new HashMap<String,Object>();
-        modifyResult.put("article", pwCheckData);
+        modifyResult.put("article", result);
         modifyResult.put("pageNum", rollBackPage);
 
         return modifyResult;
@@ -242,7 +285,7 @@ public class ajaxController {
         pwCheckData = boardService.getViewArticlePwCheck(boardNo);
         String articlePw = (String) pwCheckData.get("articlePassword");
         //결과 맵핑용 변수 선언
-       String result;
+        String result;
         //db에 저장된 pw와 유저가 입력한 pw 비교하여 결과 맵핑
         if(Objects.equals(articlePw, userPw)) {
             result = "success";
@@ -259,12 +302,12 @@ public class ajaxController {
     }
 
     @PostMapping("/modifyArticleDbAjax")  //게시물 수정 로직 실행
-    public Map<String, Object> modifyArticleDb(HttpServletRequest request, HttpServletResponse response, Model model) {
+    public Map<String, Object> modifyArticleDb(Principal principal,HttpServletRequest request, HttpServletResponse response, Model model) {
         //html 내 정보 변수 저장
         int rollBackPage = Integer.parseInt(request.getParameter("pageNum"));
         String boardNo = request.getParameter("boardNo");
         String title = request.getParameter("title");
-        String writer = request.getParameter("writer");
+//        String writer = request.getParameter("writer");
         String content = request.getParameter("content");
         boolean userSecretCheck = Boolean.parseBoolean(request.getParameter("secretCheck"));
         String userPw = request.getParameter("articlePw");      //공개글>비밀글 신규 pw
@@ -283,6 +326,7 @@ public class ajaxController {
         //기존 저장된 비밀글 확인 flag, pw 번수명 선언
         boolean dbSecretCheck = (boolean) pwCheckData.get("isSecret");
         String articlePw = (String) pwCheckData.get("articlePassword");
+        String writer = (String) pwCheckData.get("writer");
 
 
         // 클라이언트 result Map 선언 및 공통 전달인자 입력
@@ -290,7 +334,7 @@ public class ajaxController {
         sendResult.put("pageNum",rollBackPage);            //pageNum 정보 저장
 
         //내용에 공백검사
-        if(content.isBlank() || writer.isBlank() || title.isBlank()) {
+        if(content.isBlank() || title.isBlank()) {
             sendResult.put("code", "textWrong");
             return sendResult;
         }
@@ -298,44 +342,56 @@ public class ajaxController {
         // db 전달맵 선언 및 공통 전달인자 입력
         Map<String, Object> modifyArticle = new HashMap<String, Object>();
         modifyArticle.put("title", title);
-        modifyArticle.put("writer", writer);
         modifyArticle.put("content", content);
         modifyArticle.put("boardNo", boardNo);
 
-        if(dbSecretCheck) {                                           //기존 비밀글일 경우
-            if(articlePw.equals(userPw)) {                            //입력 비밀번호 대조 통과하면서 비밀글>공개글일 경우 처리 로직
-                if(!userSecretCheck) {
-                    modifyArticle.put("secretCheck", secretCheck);    //flag 변경
-                    modifyArticle.put("articlePw", "");               //비밀번호 삭제
-                }
-            } else {                                                  //입력비밀번호가 기존비밀번호와 다른경우
-                sendResult.put("code","pwWrong");
-                return sendResult;
-            }
-        } else {                                                     //기존 공개글 일 경우
-            if(userSecretCheck) {                                    //공개글>비밀글
-                if(userPw.length() >= 4 && userPw.length() <= 8) {
-                    modifyArticle.put("secretCheck", secretCheck);   //flag 변경
-                    modifyArticle.put("articlePw", userPw);          //비밀번호 신규추가
-                } else {                                             //비밀번호 양식이 아닐경우
-                    sendResult.put("code","newPwWrong");
+        //세션 정보 확인
+        String sessionInfo = "not login";
+        String session = "null";
+        if (principal != null) {
+            sessionInfo = principal.getName();
+            session = "use";
+        }
+
+        if(writer.equals(sessionInfo) && session.equals("use")){
+            if(dbSecretCheck) {                                           //기존 비밀글일 경우
+                if(articlePw.equals(userPw)) {                            //입력 비밀번호 대조 통과하면서 비밀글>공개글일 경우 처리 로직
+                    if(!userSecretCheck) {
+                        modifyArticle.put("secretCheck", secretCheck);    //flag 변경
+                        modifyArticle.put("articlePw", "");               //비밀번호 삭제
+                    }
+                } else {                                                  //입력비밀번호가 기존비밀번호와 다른경우
+                    sendResult.put("code","기존의 비밀번호를 입력해야 합니다,");
                     return sendResult;
                 }
+            } else {                                                     //기존 공개글 일 경우
+                if(userSecretCheck) {                                    //공개글>비밀글
+                    if(userPw.length() >= 4 && userPw.length() <= 8) {
+                        modifyArticle.put("secretCheck", secretCheck);   //flag 변경
+                        modifyArticle.put("articlePw", userPw);          //비밀번호 신규추가
+                    } else {                                             //비밀번호 양식이 아닐경우
+                        sendResult.put("code","비밀번호는 4-8자리 숫자만 가능합니다");
+                        return sendResult;
+                    }
+                }
             }
+        } else {
+            sendResult.put("code","못된 사용자군요 이상한짓하지마세요");
+            return sendResult;
         }
 
         //수정 정보 db 전달
         int modifyArticles = boardService.modifyArticle(modifyArticle);
-        if(modifyArticles > 0) {               //처리결과가 이상이 없을 경우
+        if(modifyArticles > 0) {                //처리결과가 이상이 없을 경우
             sendResult.put("code", "success");  //성공 코드
         } else {
-            sendResult.put("code", "dbError");  //아닐경우 실패코드
+            sendResult.put("code", "예기치 못한 에러가 생겼습니다.");  //아닐경우 실패코드
         }
         return sendResult;
     }
 
     @PostMapping("/deleteArticleAjax")  //게시물 삭제 로직 실행
-    public Map<String, Object> deleteArticle(HttpServletRequest request, HttpServletResponse response, Model model) {
+    public Map<String, Object> deleteArticle(Principal principal,HttpServletRequest request, HttpServletResponse response, Model model) {
 
         // boradNo, 비밀글 여부, 유저 입력 pw 전달받음
         String boardNo = request.getParameter("boardNo");
@@ -350,31 +406,47 @@ public class ajaxController {
         pwCheckData = boardService.getViewArticlePwCheck(Integer.parseInt(boardNo));
         String articlePw = (String) pwCheckData.get("articlePassword");
         boolean dbSecretCheck = (boolean) pwCheckData.get("isSecret");
+        String writer = (String) pwCheckData.get("writer");
 
         //결과값 저장 변수 선언언
-        String result = "error";
+        String result = "예기치 못한 에러가 발생했습니다.";
         int deleteArticles = 0;
 
-        //비밀글일경우
-        if(dbSecretCheck) {
-            if(articlePw.equals(reCheckPw)) {                         //db에 저장된 비번과 유저가 입력한 비밀번호 비교
-                deleteArticles = boardService.deleteArticle(delete);  //db 삭제 실행
-            } else {                                                  //비밀번호가 다를경우
-                result = "pwFail";                                    //code에 비밀번호 오류 입력
-            }
-        } else {                                                      //공개글일경우
-            deleteArticles = boardService.deleteArticle(delete);      //db 삭제 실행
+        //세션 정보 확인
+        String sessionInfo = "not login";
+        String session = "null";
+        if (principal != null) {
+            sessionInfo = principal.getName();
+            session = "use";
         }
 
-        //서비스 실행 후 이상없이 return 값이 1인경우
-        if(deleteArticles > 0) {
-            result = "success";     //code 에 성공 입력
+
+        Map<String, Object> deleteResult = new HashMap<String, Object>();
+        if(writer.equals(sessionInfo) && session.equals("use")) {         //기존등록자 접근인지 확인
+            //비밀글일경우
+            if(dbSecretCheck) {
+                if(articlePw.equals(reCheckPw)) {                         //db에 저장된 비번과 유저가 입력한 비밀번호 비교
+                    deleteArticles = boardService.deleteArticle(delete);  //db 삭제 실행
+                } else {                                                  //비밀번호가 다를경우
+                    result = "기존 입력 비밀번호를 입력해야 합니다.";           //code에 비밀번호 오류 입력
+                }
+            } else {                                                      //공개글일경우
+                deleteArticles = boardService.deleteArticle(delete);      //db 삭제 실행
+            }
+
+            //서비스 실행 후 이상없이 return 값이 1인경우
+            if(deleteArticles > 0) {
+                result = "success";     //code 에 성공 입력
+            }
+        } else {
+            deleteResult.put("code","못된 사용자군요 이상한짓하지마세요");
+            return deleteResult;
         }
 
         //기존페이지 저장
         int rollBackPage = Integer.parseInt(request.getParameter("pageNum"));
 
-        Map<String, Object> deleteResult = new HashMap<String, Object>();
+
         deleteResult.put("code", result);
         deleteResult.put("pageNum", rollBackPage);
         return deleteResult;
@@ -413,8 +485,7 @@ public class ajaxController {
         signUpArticle.put("userId",userId);
         signUpArticle.put("userPw",userPw);
         signUpArticle.put("userTel",userTel);
-//todo 밸리데이션 추가,결과값 맵핑
-//todo 전체적으로 코드가 아닌 결과 맵핑시 메세지 입력해서 js 에 에러메세지 바로 얼롯띄우기
+
         int result = boardService.signUp(signUpArticle);
 
         Map<String, Object> signUpResult = new HashMap<>();

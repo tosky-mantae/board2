@@ -37,7 +37,7 @@
                 <tr>
                     <td class="viewTextTitle"> 작성자 </td>
                     <td>
-                        <input class="viewText" maxlength='10' type="text" placeholder="작성자를 입력 하세요" id="writer">
+                        <input class="viewText" maxlength='10' type="text" th:value="${userId}" id="writer" disabled/>
                         <div class="exception" id="writerException">작성자를 입력 하세요</div>
                     </td>
                 </tr>

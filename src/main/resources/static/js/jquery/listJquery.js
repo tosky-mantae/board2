@@ -29,8 +29,22 @@ function ajaxGetList() {
             let list = json.articles;
 
             let articleTotalCount = json.articleTotalCount; // 총 게시물수
-            let pageNum = json.pageNum;     // 현재 페이지 번호
-            let pageView = json.pageView;   // 페이지당 게시물 수
+            let pageNum = json.pageNum;                     // 현재 페이지 번호
+            let pageView = json.pageView;                   // 페이지당 게시물 수
+            let sessionInfo = json.sessionInfo;             // 현재 접속 유저정보
+            let session = json.session;
+
+            if(sessionInfo == "not login" && session == "null") {
+                //여기에 로그인 안한경우 리스트 셋팅\
+                $("#userInfo").css("display", "none");
+                $("#loginBtn").html("로그인");
+
+                //게시글등록 클릭시 로그인으로
+            } else {
+                $("#userInfo").css("display", "");
+                $("#userInfo").html(sessionInfo + "님 반갑습니다.");
+                $("#loginBtn").html("로그아웃");
+            }
 
             $("#listTbody").html("");
             let row = ""
@@ -57,7 +71,6 @@ function ajaxGetList() {
                         height : "20px"
                     })
                 }
-
                 // td 내용 리셋
                 row = ""
                 };
@@ -160,20 +173,4 @@ function movePage(x) {
 function searchSet() {
     document.getElementById('pageNum').value = 1;
     ajaxGetList();
-}
-
-function secretImgSet() {
-
-    let x = document.createElement("IMG");
-
-    x.setAttribute("src", "secretIcon.png");
-
-    x.setAttribute("width", "304");
-
-    x.setAttribute("height", "228");
-
-    x.setAttribute("alt", "랜덤짤");
-
-    document.body.appendChild(x);
-
 }

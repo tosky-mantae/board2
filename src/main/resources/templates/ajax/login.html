@@ -7,49 +7,29 @@
     <title>로그인</title>
 </head>
 
-<body class="">
-    <div class="container">
-<!--        <table>-->
-<!--            <thead>-->
-<!--                <tr>-->
-<!--                    <th colspan="2">-->
-<!--                        <span>Login Page</span>-->
-<!--                    </th>-->
-<!--                </tr>-->
-<!--            </thead>-->
-<!--            <tbody>-->
-<!--                <tr>-->
-<!--                    <td>id</td>-->
-<!--                    <td>-->
-<!--                        <input id="userId" name="userId" type="text">-->
-<!--                    </td>-->
-<!--                </tr>-->
-<!--                <tr>-->
-<!--                    <td>pw</td>-->
-<!--                    <td>-->
-<!--                        <input id="userPw" name="userPw" type="password">-->
-<!--                    </td>-->
-<!--                </tr>-->
-<!--                <tr>-->
-<!--                    <td>-->
-<!--                        <button id="signUpBtn" onclick="location.href='/signUp'">회원가입</button>-->
-<!--                    </td>-->
-<!--                    <td>-->
-<!--                        <button id="loginBtn" onclick="loginCheck()">로그인</button>-->
-<!--                    </td>-->
-<!--                </tr>-->
-<!--            </tbody>-->
-<!--        </table>-->
+<body class="loginBody">
+    <div>
+        <h1 onclick="listPage();return false;" >mantaeHomePage</h1>
     </div>
-</body>
-<form id="frm" name="frm" th:action="@{/login_proc}" method="post">
-        <div class="container">
+    <h2 class="login-form">Login</h2>
+    <form id="frm" name="frm" th:action="@{/login_proc}" method="post">
+        <div class="int-area">
             <input id="userId" name="userId" placeholder="아이디" type="text">
-            <input class="mt18" id="userPw" name="userPw" placeholder="비밀번호" type="password">
-            <button type="submit"> 로그인 </button>
-            <a id="signUpBtn" th:href="@{'/signUp'}">회원가입</a>
         </div>
-</form>
+        <div class="int-area">
+            <input id="userPw" name="userPw" placeholder="비밀번호" type="password">
+        </div>
+        <div class="int-area">
+            <div>
+                <button class="loginBtn" onclick="loginCheck();return false;"> 로그인 </button>
+            </div>
+            <div class="signUpBtn">
+                <a th:href="@{'/signUp'}">회원가입</a>
+            </div>
+        </div>
+    </form>
+</body>
+
 
 
 

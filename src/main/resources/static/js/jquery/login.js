@@ -31,6 +31,21 @@ function loginCheck() {
     if($("#userPw").val() == "") {
         alert('비밀번호를 입력해주세요');
     }else {
-        loginAjax();
+        $("form").submit();
     }
-};
+}
+function listPage(){
+    location.replace("/listAjaxTest");
+}
+//
+// function loginCheck() {
+//     if($("#userId").val() == "") {
+//         alert('id를 입력해주세요');
+//     }
+//
+//     if($("#userPw").val() == "") {
+//         alert('비밀번호를 입력해주세요');
+//     }else {
+//         loginAjax();
+//     }
+// };

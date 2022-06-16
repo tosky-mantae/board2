@@ -25,12 +25,12 @@ function secretCheckAjax() {
 
             $(".container").css("display" , "none");        //비밀번호 입력시 html 숨김 처리
 
-            if(jsonData.article.isSecret == 1) {                        //비밀글일경우
+            if(jsonData.article == "비밀") {                        //비밀글일경우
                 $("#pwCheckBtn").attr("onclick","pwCheckAjax()")//팝업창 확인버튼 온클릭 이벤트 변경
                 $(".modal").fadeIn();                                   //비밀번호 입력 모달창 띄우기
                 $("#pageNum").val(pageNum)                              //취소 버튼 입력시 롤백을 위한 페이지번호 배치
 
-            }else if(jsonData.article.isSecret == 0){                 //공개글일경우 조회로직 실행
+            }else if(jsonData.article == "공개"){                 //공개글일경우 조회로직 실행
                 viewAjax();
             }
         },      // 요청 완료 시
@@ -103,6 +103,7 @@ function viewAjax() {
             let boardNo = jsonData.article.boardNo;
             let isSecret = jsonData.article.isSecret;
             let pageNum = jsonData.pageNum;
+            let sessionInfo = jsonData.sessionInfo;
 
             //내용 할당 및 수정불가
             $("#writer").val(writer)
@@ -124,8 +125,14 @@ function viewAjax() {
             $(".exception").css("display" , "none");
 
             //삭제 버튼 숨김
-            $(".modifyShow").css("display","none")
-            $(".viewShow").css("display","")
+            $(".modifyShow").css("display","none");
+            $(".viewShow").css("display","");
+
+            //본인글이 아닑경우
+            if(sessionInfo != writer) {
+                $("#modifyBtn").css("display","none");
+            }
+
         },      // 요청 완료 시
         error : function() {},      // 요청 실패
         complete : function() {}    // 요청의 실패, 성공과 상관 없이 완료 될 경우 호출
@@ -153,10 +160,8 @@ function delAjax() {
             if(jsonData.code == "success") {
                 alert("삭제완료!");
                 location.href = "/listAjaxTest?pageNum="+jsonData.pageNum;  //이전 페이지로
-            }else if(jsonData.code == "pwFail"){
-                alert("잘못된 비밀번호 입니다.");
-            }else {
-                alert("관리자에게 문의 하세요.01038107945");
+            } else {
+                alert(jsonData.code);
             }
         },      // 요청 완료 시
         error : function() {},      // 요청 실패
@@ -177,7 +182,7 @@ function modifyAjax() {
     modifyArticle.append("pageNum", $("#pageNum").val());
     modifyArticle.append("title", $("#title").val());
     modifyArticle.append("writer", $("#writer").val());
-    modifyArticle.append("content", $("#content").html());
+    modifyArticle.append("content", $("#content").val());
     modifyArticle.append("articlePw", $("#articlePw").val());   //비밀번호 설정시 pw 값
     modifyArticle.append("secretCheck", isSecretCheck);         //비밀글 설정 체크박스
     modifyArticle.append("reCheckPw", $("#pwInput").val());     //팝업창 입력 pw
@@ -199,14 +204,8 @@ function modifyAjax() {
                  $("#titleHead").html("조회페이지");    //타이틀 변경
                  $("#articlePw").val("");
                  $(".modal").fadeOut();                     //팝업 닫음
-             }else if(jsonData.code == "dbError") {
-                 alert("관리자에게 문의하세요 01038107945");
-             }else if(jsonData.code == "textWrong") {
-                 alert("빈칸없이 입력하시오.");
-             }else if(jsonData.code == "pwWrong"){
-                 alert("기존의 비밀번호를 입력해야 합니다.");
-             }else if(jsonData.code == "newPwWrong"){
-                 alert("비밀번호는 4-8글자의 숫자만 입력 가능합니다.");
+             }else {
+                 alert(jsonData.code);
              }
 
         },      // 요청 완료 시
@@ -255,45 +254,53 @@ function delCheck(){
 //수정완료시 공백및 비밀번호 체크
 function modifyCheck() {
 
-    $(".exception").css("display" , "none");
+    $(".exception").css("display", "none");
 
-    if($.trim($("#title").val()) == "") {
+    if ($.trim($("#title").val()) == "") {
         alert('제목을 입력해주세요');
-        $("#titleException").css("display" , "");
+        $("#titleException").css("display", "");
     }
 
-    if($.trim($("#writer").val()) == "") {
+    if ($.trim($("#writer").val()) == "") {
         alert('작성자를 입력해주세요');
-        $("#writerException").css("display" , "");
+        $("#writerException").css("display", "");
     }
 
-    if($.trim($("#content").val()) == "") {
+    if ($.trim($("#content").val()) == "") {
         alert('본문을 입력해주세요');
-        $("#contentException").css("display" , "");
+        $("#contentException").css("display", "");
     }
-
-    if(confirm("수정 하시겠습니까?")) {
-        modifyAjax();
-        // if($("#isSecretNum").val() == "true"){                              //기존에 비밀글이였을경우
-        //     // $("#pwCheckBtn").attr("onclick","modifyAjax()");    //팝업창 확인버튼 온클릭이벤트 변경
-        //     // $("#pwInput").val("");                                    //기존 팝업창 인풋 value 초기화
-        //     // $(".modal").fadeIn();                                           //팝업창 소환
-        // }else{
-        //     // modifyAjax();
-        // }
+    if ($("#isSecretNum").val() == "true") {
+        if ($("#articlePw").val().length > 3 && $("#articlePw").val().length < 9) {
+            modifyAjax();
+        } else {
+            alert("기존 비밀번호를 입력하시오")
+        }
     } else {
-
+        if (confirm("수정 하시겠습니까?")) {
+            modifyAjax();
+        }
     }
 }
+
+
+    // if($("#isSecretNum").val() == "true"){                              //기존에 비밀글이였을경우
+    //     // $("#pwCheckBtn").attr("onclick","modifyAjax()");    //팝업창 확인버튼 온클릭이벤트 변경
+    //     // $("#pwInput").val("");                                    //기존 팝업창 인풋 value 초기화
+    //     // $(".modal").fadeIn();                                           //팝업창 소환
+    // }else{
+    //     // modifyAjax();
+    // }
+
 //비밀글 체크시 비밀번호 입력창 활성화, 비활성화
-function secretSecretArticle() {
-    if($('input:checkbox[id="secretCheck"]').is(":checked") == true) {
-        $("#articlePw").attr("disabled" , false);
-    } else{
-        $("#articlePw").val("");
-        $("#articlePw").attr("disabled" , true);
+    function secretSecretArticle() {
+        if ($('input:checkbox[id="secretCheck"]').is(":checked") == true) {
+            $("#articlePw").attr("disabled", false);
+        } else {
+            $("#articlePw").val("");
+            $("#articlePw").attr("disabled", true);
+        }
+        if ($("#isSecretNum").val() == "true") {
+            $("#articlePw").attr("disabled", false);
+        }
     }
-    if($("#isSecretNum").val() == "true"){
-        $("#articlePw").attr("disabled" , false);
-    }
-};

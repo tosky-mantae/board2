@@ -10,7 +10,7 @@
 
     <update id="modifyArticle" parameterType="map" >
         UPDATE board
-        set title = #{title}, content = #{content}, writer = #{writer}
+        set title = #{title}, content = #{content}
          <if test="secretCheck != null">
             , isSecret = #{secretCheck}, articlePassword = #{articlePw}
          </if>
@@ -72,7 +72,7 @@
     </select>
 
     <select id="getViewArticlePwCheck" parameterType="int" resultType="map">
-        SELECT isSecret , articlePassword FROM board where boardNo = #{boardNo}
+        SELECT isSecret , articlePassword , writer FROM board where boardNo = #{boardNo}
     </select>
 
     <select id="getViewArticle2" parameterType="int" resultType="map">

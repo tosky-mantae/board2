@@ -5,7 +5,7 @@ function hiddenException() {
 window.onload = function() {
     // 경고태그 히든처리
     hiddenException();
-};
+}
 
 function writeAjax() {
 
@@ -20,7 +20,7 @@ function writeAjax() {
         async : true,       // false 일 경우 동기 요청으로 변경
         type : "POST",      // GET, PUT
         data : {
-            writer : $("#writer").val(),
+            // writer : $("#writer").val(),
             title : $("#title").val(),
             content : $("#content").val(),
             secretCheck : isSecretCheck,
@@ -47,16 +47,19 @@ function writeCheck() {
     if($.trim($("#title").val()) == "") {
         alert('제목을 입력해주세요');
         $("#titleException").css("display" , "");
+        return false;
     }
 
     if($.trim($("#writer").val()) == "") {
         alert('작성자를 입력해주세요');
         $("#writerException").css("display" , "");
+        return false;
     }
 
     if($.trim($("#content").val()) == "") {
         alert('본문을 입력해주세요');
         $("#contentException").css("display" , "");
+        return false;
     }
 
     let isSecretCheck;
@@ -66,9 +69,11 @@ function writeCheck() {
         isSecretCheck = 0;
     }
 
-    if(isSecretCheck == 1 && $("#articlePw").val().length > 8 || $("#articlePw").val().length < 4) {
-        alert("비밀번호는 4-8글자의 숫자만 입력 가능합니다")
-        return false;
+    if(isSecretCheck == 1) {
+        if($("#articlePw").val().length > 8 || $("#articlePw").val().length < 4) {
+            alert("비밀번호는 4-8글자의 숫자만 입력 가능합니다")
+            return false;
+        }
     }
 
     if(confirm("등록 하시겠습니까?")) {
