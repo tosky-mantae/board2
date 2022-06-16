@@ -29,13 +29,11 @@ function writeAjax() {
         dataType : "json",        // xml, json, script, html
         beforeSend : function() {},         // 서버 요청 전 호출 되는 함수 return false; 일 경우 요청 중단
         success : function(json) {
-            if(json.code == "textError") {           // Result Code / 1 : 성공, 33 : 예외처리
-                alert("빈칸없이 작성하시오.");
-            } else if(json.code == "success") {     // Result Code / 1 : 성공, 33 : 예외처리
+            if(json.code == "success") {
                 alert("등록완료!");
                 location.href = "/listAjaxTest";
-            }else if(json.code == "newPwWrong"){
-                alert("비밀번호는 4-8자리 만 가능.");
+            } else {
+                alert(json.code)
             }
         },      // 요청 완료 시
         error : function() {},      // 요청 실패
@@ -68,7 +66,7 @@ function writeCheck() {
         isSecretCheck = 0;
     }
 
-    if(isSecretCheck == 1 && $("#articlePw").val().length < 4) {
+    if(isSecretCheck == 1 && $("#articlePw").val().length > 8 || $("#articlePw").val().length < 4) {
         alert("비밀번호는 4-8글자의 숫자만 입력 가능합니다")
         return false;
     }

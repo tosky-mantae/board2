@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.security.Principal;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.*;
@@ -22,7 +23,7 @@ public class ajaxController {
     BoardService boardService;
 
     @PostMapping(value = "/listAjax")  //게시물 목록 생성 로직 실행
-    public Map<String, Object> articleList(HttpServletRequest request, HttpServletResponse response, Model model) {
+    public Map<String, Object> articleList(Principal principal, HttpServletRequest request, HttpServletResponse response, Model model) {
         //검색요소
         String searchKeyword = request.getParameter("searchKeyword");
         String selectComponent = request.getParameter("selectComponent");
@@ -111,6 +112,17 @@ public class ajaxController {
                 break;
             }
         }
+//todo 메모장에있는거 구현할방법 생각해보기
+//        String userinfo = principal.getName();
+//        if(userinfo == null) {
+//            System.out.println("없음");
+//        }
+//        System.out.println(userinfo);
+
+        if (principal != null) {
+            System.out.println("타입정보 : " + principal.getClass());
+            System.out.println("ID정보 : " + principal.getName());
+        }
 
         //json을 위한 맵
         Map<String, Object> listArticle = new HashMap<>();
@@ -138,31 +150,42 @@ public class ajaxController {
         String title = request.getParameter("title");
         String writer = request.getParameter("writer");
         String content = request.getParameter("content");
-        String secretCheck = request.getParameter("secretCheck");
-        String articlePw = request.getParameter("articlePw");
+        int secretCheck = Integer.parseInt(request.getParameter("secretCheck"));
+        String userPw = request.getParameter("articlePw");
 
-        // 맵형식으로 저장
-        Map<String, String> article = new HashMap<String, String>();
+        boolean isSecret;
+        if(secretCheck == 1) {
+            isSecret = true;
+        } else {
+            isSecret = false;
+        }
 
+        // db전달 인자 맵형식으로 저장
+        Map<String, Object> article = new HashMap<String, Object>();
         article.put("title", title);
         article.put("writer", writer);
         article.put("content", content);
         article.put("secretCheck", secretCheck);
-        article.put("articlePw", articlePw);
 
+        // ajax 리턴값 맵선언
         Map<String, Object> result = new HashMap<>();
 
-        if(articlePw.length() > 4){
-            result.put("code","newPwError");
+        if(isSecret){                                           //비밀글 선택시
+            if(userPw.length() >= 4 && userPw.length() <= 8){   //비밀번호 자릿수 검사
+                article.put("articlePw", userPw);               //통과시 dbMap에 저장
+            } else {
+                result.put("code", "비밀번호는 4-8자리 만 가능.");  //비밀번호 오류
+                return result;
+            }
         }
 
         // 예외처리 문자열 공백 검사
         if(content.isBlank() || writer.isBlank() || title.isBlank()) {
-            result.put("code","textError");     //공백이있을경우 텍스트에러 입력
+            result.put("code","빈칸없이 작성하시오.");     //공백이있을경우 텍스트에러 입력
         } else {
             // 서비스단으로 이동
             int articles = boardService.writeBoardArticle(article);
-            if (articles == 1){
+            if (articles > 0){
              result.put("code","success");      //db에 이상없이 저장되어 return 값이 1이온경우 성공 입력
             }
         }
@@ -175,7 +198,7 @@ public class ajaxController {
         int boardNo = Integer.parseInt(request.getParameter("boardNo"));
 
         //게시물 번호를 인자로 담아 조회해온 게시글을 리스트<맵>형식으로 html에 전달
-        Map<String, String> viewData = new HashMap<>();
+        Map<String, Object> viewData = new HashMap<>();
         viewData = boardService.getViewArticle(boardNo);
 
         //기존페이지 저장
@@ -194,7 +217,7 @@ public class ajaxController {
         int boardNo = Integer.parseInt(request.getParameter("boardNo"));
 
         //게시물 번호를 인자로 담아 조회해온 게시글을 리스트<맵>형식으로 html에 전달
-        Map<String, String> pwCheckData = new HashMap<>();
+        Map<String, Object> pwCheckData = new HashMap<>();
         pwCheckData = boardService.getViewArticlePwCheck(boardNo);
 
         //기존페이지 저장
@@ -210,26 +233,23 @@ public class ajaxController {
     @PostMapping("/pwCheckAjax")   //비밀글 비밀번호 조회 및 비교 로직
     public Map<String, Object> pwCheckAjax(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 
+        int pageNum = Integer.parseInt(request.getParameter("pageNum"));
         int boardNo = Integer.parseInt(request.getParameter("boardNo"));
         String userPw = request.getParameter("userPw");
 
-        //게시물 번호를 인자로 담아 조회해온 게시글을 리스트<맵>형식으로 html에 전달
-        Map<String, String> pwJoinData = new HashMap<>();
-        pwJoinData = boardService.pwJoinData(boardNo);
-        String articlePw = pwJoinData.get("articlePassword");
-        String result;
-
-        //db에 저장된 비번과 유저가 입력한 비밀번호 비교하여 결과 맵핑
-        if(Objects.equals(articlePw, userPw)){
+        //boardNo로 기존 저장된 pw 조회
+        Map<String, Object> pwCheckData = new HashMap<>();
+        pwCheckData = boardService.getViewArticlePwCheck(boardNo);
+        String articlePw = (String) pwCheckData.get("articlePassword");
+        //결과 맵핑용 변수 선언
+       String result;
+        //db에 저장된 pw와 유저가 입력한 pw 비교하여 결과 맵핑
+        if(Objects.equals(articlePw, userPw)) {
             result = "success";
-        }else {
+        } else {
             result = "fail";
         }
-
-
-        //기존페이지 저장
-        int pageNum = Integer.parseInt(request.getParameter("pageNum"));
-
+        //ajax 전달용 Map
         Map<String,Object>pwJoinResult = new HashMap<String,Object>();
 
         pwJoinResult.put("pageNum", pageNum);
@@ -246,61 +266,58 @@ public class ajaxController {
         String title = request.getParameter("title");
         String writer = request.getParameter("writer");
         String content = request.getParameter("content");
-        String secretCheck = request.getParameter("secretCheck");
+        boolean userSecretCheck = Boolean.parseBoolean(request.getParameter("secretCheck"));
         String userPw = request.getParameter("articlePw");      //공개글>비밀글 신규 pw
 //        String reCheckPw = request.getParameter("reCheckPw");   //팝업창 비밀번호
 
-        //기존 저장된 정보 불러옴
-        Map<String, String> viewData = new HashMap<>();
-        viewData = boardService.getViewArticle(Integer.parseInt(boardNo));
+        int secretCheck;        //db저장용 인트형 변환
+        if(userSecretCheck) {
+            secretCheck = 1;
+        } else {
+            secretCheck = 0;
+        }
 
+        //기존 저장된 정보 불러옴
+        Map<String, Object> pwCheckData = new HashMap<>();
+        pwCheckData = boardService.getViewArticlePwCheck(Integer.parseInt(boardNo));
         //기존 저장된 비밀글 확인 flag, pw 번수명 선언
-        String dbSecretCheck =String.valueOf(viewData.get("isSecret"));
-        String articlePw = viewData.get("articlePassword");
+        boolean dbSecretCheck = (boolean) pwCheckData.get("isSecret");
+        String articlePw = (String) pwCheckData.get("articlePassword");
+
 
         // 클라이언트 result Map 선언 및 공통 전달인자 입력
         Map<String, Object> sendResult = new HashMap<String, Object>();
         sendResult.put("pageNum",rollBackPage);            //pageNum 정보 저장
 
-        if(content.isBlank() || writer.isBlank() || title.isBlank()) {  //내용에 공백이 있을 경우
-
+        //내용에 공백검사
+        if(content.isBlank() || writer.isBlank() || title.isBlank()) {
             sendResult.put("code", "textWrong");
             return sendResult;
-            }
+        }
 
         // db 전달맵 선언 및 공통 전달인자 입력
-        Map<String, String> modifyArticle = new HashMap<String, String>();
+        Map<String, Object> modifyArticle = new HashMap<String, Object>();
         modifyArticle.put("title", title);
         modifyArticle.put("writer", writer);
         modifyArticle.put("content", content);
         modifyArticle.put("boardNo", boardNo);
 
-        System.out.println(dbSecretCheck);
-        if(Objects.equals(dbSecretCheck, "true")) {              //기존 비밀글일 경우
-
-            if(Objects.equals(articlePw, userPw)){               //입력 비밀번호 대조 통과시
-
-                if(Objects.equals(secretCheck, "0")){            //비밀글>공개글 처리 로직
-                    modifyArticle.put("secretCheck", secretCheck);  //flag 변경
-                    modifyArticle.put("articlePw", "");             //비밀번호 삭제
-
-                } else if(Objects.equals(secretCheck, "1")) {    //비밀글>비밀글
-
+        if(dbSecretCheck) {                                           //기존 비밀글일 경우
+            if(articlePw.equals(userPw)) {                            //입력 비밀번호 대조 통과하면서 비밀글>공개글일 경우 처리 로직
+                if(!userSecretCheck) {
+                    modifyArticle.put("secretCheck", secretCheck);    //flag 변경
+                    modifyArticle.put("articlePw", "");               //비밀번호 삭제
                 }
-            }else {                                                //입력비밀번호가 기존비밀번호와 다른경우
+            } else {                                                  //입력비밀번호가 기존비밀번호와 다른경우
                 sendResult.put("code","pwWrong");
                 return sendResult;
             }
-        } else if(Objects.equals(dbSecretCheck, "false")) {     //기존 공개글 일 경우
-
-            if(Objects.equals(secretCheck, "1")){               //공개글>비밀글
-                if(userPw.length() > 4) {
-                    modifyArticle.put("secretCheck", secretCheck);     //flag 변경
-                    modifyArticle.put("articlePw", userPw);             //비밀번호 신규추가
-                }else if(userPw.length() > 9){
-                    sendResult.put("code","newPwWrong");
-                    return sendResult;
-                }else{
+        } else {                                                     //기존 공개글 일 경우
+            if(userSecretCheck) {                                    //공개글>비밀글
+                if(userPw.length() >= 4 && userPw.length() <= 8) {
+                    modifyArticle.put("secretCheck", secretCheck);   //flag 변경
+                    modifyArticle.put("articlePw", userPw);          //비밀번호 신규추가
+                } else {                                             //비밀번호 양식이 아닐경우
                     sendResult.put("code","newPwWrong");
                     return sendResult;
                 }
@@ -309,9 +326,9 @@ public class ajaxController {
 
         //수정 정보 db 전달
         int modifyArticles = boardService.modifyArticle(modifyArticle);
-        if(modifyArticles == 1) {               //처리결과가 이상이 없을 경우
+        if(modifyArticles > 0) {               //처리결과가 이상이 없을 경우
             sendResult.put("code", "success");  //성공 코드
-        }else{
+        } else {
             sendResult.put("code", "dbError");  //아닐경우 실패코드
         }
         return sendResult;
@@ -322,34 +339,35 @@ public class ajaxController {
 
         // boradNo, 비밀글 여부, 유저 입력 pw 전달받음
         String boardNo = request.getParameter("boardNo");
-        String secretCheck = request.getParameter("secretCheck");
         String reCheckPw = request.getParameter("reCheckPw");
 
-        Map<String, String> pwJoinData = new HashMap<>();
-
         //db삭제 인자 저장
-        Map<String, String> delete = new HashMap<String, String>();
+        Map<String, Object> delete = new HashMap<String, Object>();
         delete.put("boardNo", boardNo);
 
         //db에서 기존 pw 조회
-        pwJoinData = boardService.pwJoinData(Integer.parseInt(boardNo));
-        String articlePw = pwJoinData.get("articlePassword");
+        Map<String, Object> pwCheckData = new HashMap<>();
+        pwCheckData = boardService.getViewArticlePwCheck(Integer.parseInt(boardNo));
+        String articlePw = (String) pwCheckData.get("articlePassword");
+        boolean dbSecretCheck = (boolean) pwCheckData.get("isSecret");
 
         //결과값 저장 변수 선언언
-        String result = null;
+        String result = "error";
         int deleteArticles = 0;
 
         //비밀글일경우
-        if(Objects.equals(secretCheck, "true")) {
-            if(Objects.equals(articlePw, reCheckPw)) {                //db에 저장된 비번과 유저가 입력한 비밀번호 비교
+        if(dbSecretCheck) {
+            if(articlePw.equals(reCheckPw)) {                         //db에 저장된 비번과 유저가 입력한 비밀번호 비교
                 deleteArticles = boardService.deleteArticle(delete);  //db 삭제 실행
-            } else {                //비밀번호가 다를경우
-                result = "pwFail";  //code에 비밀번호 오류 입력
+            } else {                                                  //비밀번호가 다를경우
+                result = "pwFail";                                    //code에 비밀번호 오류 입력
             }
-        }else{                                                        //공개글일경우
+        } else {                                                      //공개글일경우
             deleteArticles = boardService.deleteArticle(delete);      //db 삭제 실행
         }
-        if(deleteArticles == 1) {   //서비스 실행 후 이상없이 return 값이 1인경우
+
+        //서비스 실행 후 이상없이 return 값이 1인경우
+        if(deleteArticles > 0) {
             result = "success";     //code 에 성공 입력
         }
 
@@ -359,39 +377,33 @@ public class ajaxController {
         Map<String, Object> deleteResult = new HashMap<String, Object>();
         deleteResult.put("code", result);
         deleteResult.put("pageNum", rollBackPage);
-
-        // 목록으로 redirect
         return deleteResult;
     }
+
     @PostMapping("/signUpCheck")  //회원가입 체크 로직
     public Map<String, Object> signUpCheck(HttpServletRequest request, HttpServletResponse response, Model model) {
-
         String userId = request.getParameter("userId");
-
         Map<String, Object> signUpCheck = new HashMap<>();
-
         signUpCheck.put("userId",userId);
 
         int result = boardService.signUpCheck(signUpCheck);
         String resultCode;
 
-        if (result == 0){
+        if (result == 0) {
             resultCode = "success";
-        }else{
+        } else {
             resultCode = "fail";
         }
 
         Map<String, Object> signUpCheckResult = new HashMap<>();
-
         signUpCheckResult.put("code",resultCode);
-
 
         // 목록으로 redirect
         return signUpCheckResult;
     }
+
     @PostMapping("/signUp")  //회원가입
     public Map<String, Object> signUp(HttpServletRequest request, HttpServletResponse response, Model model) {
-
         String userId = request.getParameter("userId");
         String userPw = request.getParameter("userPw");
         String userTel = request.getParameter("userTel");
@@ -401,40 +413,40 @@ public class ajaxController {
         signUpArticle.put("userId",userId);
         signUpArticle.put("userPw",userPw);
         signUpArticle.put("userTel",userTel);
-
+//todo 밸리데이션 추가,결과값 맵핑
+//todo 전체적으로 코드가 아닌 결과 맵핑시 메세지 입력해서 js 에 에러메세지 바로 얼롯띄우기
         int result = boardService.signUp(signUpArticle);
 
         Map<String, Object> signUpResult = new HashMap<>();
 
         return signUpResult;
     }
-    @PostMapping("/login")  //로그인 로직 실행
-    public Map<String, Object> login(HttpServletRequest request, HttpServletResponse response, Model model) {
 
-        //아이디와 비밀번호 입력 받음
-        String userId = request.getParameter("userId");
-        String userPw = request.getParameter("userPw");
-
-        //db 전달 맵 생성
-        Map<String, Object> loginArticle = new HashMap<>();
-        loginArticle.put("userId",userId);
-
-        //아이디로 비밀번호 조회해옴
-        Map<String, Object> result = boardService.loginCheck(loginArticle);
-        String dbPw = (String) result.get("userPassWord");
-        String resultCode;
-
-        //유저 입력 pw 와 아이디에 있는 비밀번호 비교
-        if(Objects.equals(userPw , dbPw)){
-            resultCode = "success";
-        }else {
-            resultCode = "fail";
-        }
-
-        Map<String, Object> loginResult = new HashMap<>();
-        loginResult.put("code",resultCode);
-
-        return loginResult;
-    }
-
+//    @PostMapping("/login")  //로그인 로직 실행
+//    public Map<String, Object> login(HttpServletRequest request, HttpServletResponse response, Model model) {
+//        //아이디와 비밀번호 입력 받음
+//        String userId = request.getParameter("userId");
+//        String userPw = request.getParameter("userPw");
+//
+//        //db 전달 맵 생성
+//        Map<String, Object> loginArticle = new HashMap<>();
+//        loginArticle.put("userId",userId);
+//
+//        //아이디로 비밀번호 조회해옴
+//        Map<String, Object> result = boardService.loginCheck(loginArticle);
+//        String dbPw = (String) result.get("userPassWord");
+//        String resultCode;
+//
+//        //유저 입력 pw 와 아이디에 있는 비밀번호 비교
+//        if(Objects.equals(userPw , dbPw)) {
+//            resultCode = "success";
+//        } else {
+//            resultCode = "fail";
+//        }
+//
+//        Map<String, Object> loginResult = new HashMap<>();
+//        loginResult.put("code",resultCode);
+//
+//        return loginResult;
+//    }
 }

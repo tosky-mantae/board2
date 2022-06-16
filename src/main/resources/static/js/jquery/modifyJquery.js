@@ -168,9 +168,9 @@ function modifyAjax() {
     //비밀글 체크여부에따른 값 할당
     let isSecretCheck;
     if($('input:checkbox[id="secretCheck"]').is(":checked") == true) {
-        isSecretCheck = 1;
+        isSecretCheck = true;
     }else{
-        isSecretCheck = 0;
+        isSecretCheck = false;
     }
     let modifyArticle = new FormData();
     modifyArticle.append("boardNo", $("#boardNo").val());

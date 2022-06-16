@@ -4,9 +4,7 @@ package com.tosky.board2.service;
 import com.tosky.board2.dao.BoardMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.util.StringUtils;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,17 +18,17 @@ public class BoardService {
 //        List<Map<String,String>> boardList = boardMapper.getBoardList(param);
 //        return boardList;
 
-    public int writeBoardArticle(Map<String, String> param) {
+    public int writeBoardArticle(Map<String, Object> param) {
         int result = boardMapper.writeBoardArticle(param);
         return result;
     }
 
-    public int deleteArticle(Map<String, String> param) {
+    public int deleteArticle(Map<String, Object> param) {
         int result = boardMapper.deleteArticle(param);
         return result;
     }
 
-    public int modifyArticle(Map<String, String> param) {
+    public int modifyArticle(Map<String, Object> param) {
         int result = boardMapper.modifyArticle(param);
         return result;
     }
@@ -45,18 +43,13 @@ public class BoardService {
         return result;
     }
 
-    public Map<String,String> getViewArticle(int boardNo) {
-        Map<String,String> viewData = boardMapper.getViewArticle(boardNo);
+    public Map<String,Object> getViewArticle(int boardNo) {
+        Map<String,Object> viewData = boardMapper.getViewArticle(boardNo);
         return viewData;
     }
 
-    public Map<String,String> getViewArticlePwCheck(int boardNo) {
-        Map<String,String> viewData = boardMapper.getViewArticlePwCheck(boardNo);
-        return viewData;
-    }
-
-    public Map<String,String> pwJoinData(int boardNo) {
-        Map<String,String> viewData = boardMapper.pwJoinData(boardNo);
+    public Map<String,Object> getViewArticlePwCheck(int boardNo) {
+        Map<String,Object> viewData = boardMapper.getViewArticlePwCheck(boardNo);
         return viewData;
     }
 

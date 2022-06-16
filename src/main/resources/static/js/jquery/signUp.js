@@ -47,7 +47,7 @@ function signUpCheckAjax() {        //중복가입 체크
                         location.href = "/listAjaxTest";
                     }
                 }else {
-                    alert("정보기입이 잘못되었습니다.")
+                    alert("정보기입이 잘못되었습니다.");
                 }
             }else {
                 alert("관리자에게 문의 하세요 01038107945");
@@ -57,13 +57,12 @@ function signUpCheckAjax() {        //중복가입 체크
         complete : function() {}    // 요청의 실패, 성공과 상관 없이 완료 될 경우 호출
     });
 }
+
 function historyBack() {
     if(confirm("입력한 정보가 모두 지워집니다 정말 취소 하시겠습니까?")) {
         history.go(-1);
-    } else {
-
     }
-};
+}
 
 document.addEventListener("keyup", telCheck, false);
 function telCheck() {
@@ -75,18 +74,19 @@ function telCheck() {
     }else{
         $("#telCheck").html("잘못된 양식입니다.")
     }
-};
+}
+
+
 
 document.addEventListener("keyup", pwCheck, false);
 function pwCheck() {
     let pw1 = $("#userPw").val();
     let pw2 = $("#rePw").val();
-
-    if(pw1 != "" || pw2 != "") {
+    if(pw1 != "" && pw2 != "") {
         if (pw1 == pw2) {
-            $("#pwCheck").html("올바른 비밀번호 입니다.")
+            $("#pwCheck").html("올바른 비밀번호 입니다.");
         } else {
-            $("#pwCheck").html("비밀번호를 확인하세요.")
+            $("#pwCheck").html("비밀번호를 확인하세요.");
         }
     }
-};
+}

@@ -9,38 +9,48 @@
 
 <body class="">
     <div class="container">
-        <table>
-            <thead>
-                <tr>
-                    <th colspan="2">
-                        <span>Login Page</span>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>id</td>
-                    <td>
-                        <input id="userId" type="text">
-                    </td>
-                </tr>
-                <tr>
-                    <td>pw</td>
-                    <td>
-                        <input id="userPw" type="password">
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <button id="signUpBtn" onclick="location.href='/userSignUpPageAjaxView'">회원가입</button>
-                    </td>
-                    <td>
-                        <button id="loginBtn" onclick="loginCheck()">로그인</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+<!--        <table>-->
+<!--            <thead>-->
+<!--                <tr>-->
+<!--                    <th colspan="2">-->
+<!--                        <span>Login Page</span>-->
+<!--                    </th>-->
+<!--                </tr>-->
+<!--            </thead>-->
+<!--            <tbody>-->
+<!--                <tr>-->
+<!--                    <td>id</td>-->
+<!--                    <td>-->
+<!--                        <input id="userId" name="userId" type="text">-->
+<!--                    </td>-->
+<!--                </tr>-->
+<!--                <tr>-->
+<!--                    <td>pw</td>-->
+<!--                    <td>-->
+<!--                        <input id="userPw" name="userPw" type="password">-->
+<!--                    </td>-->
+<!--                </tr>-->
+<!--                <tr>-->
+<!--                    <td>-->
+<!--                        <button id="signUpBtn" onclick="location.href='/signUp'">회원가입</button>-->
+<!--                    </td>-->
+<!--                    <td>-->
+<!--                        <button id="loginBtn" onclick="loginCheck()">로그인</button>-->
+<!--                    </td>-->
+<!--                </tr>-->
+<!--            </tbody>-->
+<!--        </table>-->
     </div>
-
 </body>
+<form id="frm" name="frm" th:action="@{/login_proc}" method="post">
+        <div class="container">
+            <input id="userId" name="userId" placeholder="아이디" type="text">
+            <input class="mt18" id="userPw" name="userPw" placeholder="비밀번호" type="password">
+            <button type="submit"> 로그인 </button>
+            <a id="signUpBtn" th:href="@{'/signUp'}">회원가입</a>
+        </div>
+</form>
+
+
+
 </html>

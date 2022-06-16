@@ -72,11 +72,7 @@
     </select>
 
     <select id="getViewArticlePwCheck" parameterType="int" resultType="map">
-        SELECT isSecret FROM board where boardNo = #{boardNo}
-    </select>
-
-    <select id="pwJoinData" parameterType="int" resultType="map">
-        SELECT articlePassword FROM board where boardNo = #{boardNo}
+        SELECT isSecret , articlePassword FROM board where boardNo = #{boardNo}
     </select>
 
     <select id="getViewArticle2" parameterType="int" resultType="map">

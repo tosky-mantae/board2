@@ -51,7 +51,7 @@ public class BoardController {
         String pageNum = request.getParameter("pageNum");
 
         // 맵형식으로 저장
-        Map<String, String> article = new HashMap<String, String>();
+        Map<String, Object> article = new HashMap<String, Object>();
 
         article.put("title", title);
         article.put("writer", writer);
@@ -85,7 +85,7 @@ public class BoardController {
         int boardNo = Integer.parseInt(request.getParameter("boardNo"));
 
         //게시물 번호를 인자로 담아 조회해온 게시글을 리스트<맵>형식으로 html에 전달
-        Map<String, String> viewData = new HashMap<>();
+        Map<String, Object> viewData = new HashMap<>();
         viewData = boardService.getViewArticle(boardNo);
         model.addAttribute("article", viewData);
 
@@ -103,7 +103,7 @@ public class BoardController {
         int boardNo = Integer.parseInt(request.getParameter("boardNo"));
 
         //게시물 번호를 인자로 담아 조회해온 게시글을 리스트<맵>형식으로 html에 전달
-        Map<String, String> viewData = new HashMap<>();
+        Map<String, Object> viewData = new HashMap<>();
         viewData = boardService.getViewArticle(boardNo);
         model.addAttribute("article", viewData);
 
@@ -126,7 +126,7 @@ public class BoardController {
         String boardNo = request.getParameter("boardNo");
 
         // 맵형식으로 저장
-        Map<String, String> modifyArticle = new HashMap<String, String>();
+        Map<String, Object> modifyArticle = new HashMap<String, Object>();
 
         modifyArticle.put("title", title);
         modifyArticle.put("writer", writer);
@@ -158,7 +158,7 @@ public class BoardController {
         // boradno전달받음
         String boardNo = request.getParameter("boardNo");
 
-        Map<String, String> delete = new HashMap<String, String>();
+        Map<String, Object> delete = new HashMap<String, Object>();
 
         delete.put("boardNo", boardNo);
 
@@ -306,18 +306,6 @@ public class BoardController {
     }
 
 
-        //예외처리(정상작동)
-//        if(pageCountList.contains(pageNum)) {
-
-//            return "BoardList";
-//        }
-
-
-        // pageNum이 최대 게시판 번호 보다 클 때
-//        return "redirect:/list?pageNum=" + pageCount;
-
-
-
     @PostMapping("/searchArticle")  //게시물 검색 로직 실행
     public String searchArticle(HttpServletRequest request, HttpServletResponse response, Model model) {
         //검색  요소 전달 받음
@@ -341,17 +329,17 @@ public class BoardController {
     }
 
 
-    @GetMapping(value = "/listAjaxTest")  //게시물 목록 생성 로직 실행
-    public String listAjaxTest(HttpServletRequest request, HttpServletResponse response, Model model) {
-
-        int pageNum = 1;
-        if(!StringUtils.isEmpty(request.getParameter("pageNum"))){
-            pageNum = Integer.parseInt(request.getParameter("pageNum"));
-        }
-        model.addAttribute("pageNum", pageNum);
-
-        return "ajax/BoardListAjax";
-    }
+//    @GetMapping(value = "/listAjaxTest")  //게시물 목록 생성 로직 실행
+//    public String listAjaxTest(HttpServletRequest request, HttpServletResponse response, Model model) {
+//
+//        int pageNum = 1;
+//        if(!StringUtils.isEmpty(request.getParameter("pageNum"))){
+//            pageNum = Integer.parseInt(request.getParameter("pageNum"));
+//        }
+//        model.addAttribute("pageNum", pageNum);
+//
+//        return "ajax/BoardListAjax";
+//    }
 
     @PostMapping(value = "/articleWritePageAjaxView")  //게시물 등록 html 이동
     public String articleWritePageAjaxView(HttpServletRequest request, HttpServletResponse response, Model model) {
@@ -375,15 +363,15 @@ public class BoardController {
 
         return "ajax/BoardModifyAjax";
     }
-    @GetMapping(value = "/userSignUpPageAjaxView")  //
-    public String userSignUpPageAjaxView(HttpServletRequest request, HttpServletResponse response, Model model) {
-
-        return "ajax/signUp";
-    }
-    @GetMapping(value = "/")  //
-    public String login(HttpServletRequest request, HttpServletResponse response, Model model) {
-
-        return "ajax/login";
-    }
-
+//    @GetMapping(value = "/userSignUpPageAjaxView")  //
+//    public String userSignUpPageAjaxView(HttpServletRequest request, HttpServletResponse response, Model model) {
+//
+//        return "ajax/signUp";
+//    }
+//    @GetMapping(value = "/")  //
+//    public String login(HttpServletRequest request, HttpServletResponse response, Model model) {
+//
+//        return "ajax/login";
+//    }
+//
 }
