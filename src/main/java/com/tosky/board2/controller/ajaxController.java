@@ -355,15 +355,15 @@ public class ajaxController {
 
         if(writer.equals(sessionInfo) && session.equals("use")){
             if(dbSecretCheck) {                                           //기존 비밀글일 경우
-                if(articlePw.equals(userPw)) {                            //입력 비밀번호 대조 통과하면서 비밀글>공개글일 경우 처리 로직
+//                if(articlePw.equals(userPw)) {                            //입력 비밀번호 대조 통과하면서 비밀글>공개글일 경우 처리 로직
                     if(!userSecretCheck) {
                         modifyArticle.put("secretCheck", secretCheck);    //flag 변경
                         modifyArticle.put("articlePw", "");               //비밀번호 삭제
                     }
-                } else {                                                  //입력비밀번호가 기존비밀번호와 다른경우
-                    sendResult.put("code","기존의 비밀번호를 입력해야 합니다,");
-                    return sendResult;
-                }
+//                } else {                                                  //입력비밀번호가 기존비밀번호와 다른경우
+//                    sendResult.put("code","기존의 비밀번호를 입력해야 합니다,");
+//                    return sendResult;
+//                }
             } else {                                                     //기존 공개글 일 경우
                 if(userSecretCheck) {                                    //공개글>비밀글
                     if(userPw.length() >= 4 && userPw.length() <= 8) {
@@ -425,11 +425,11 @@ public class ajaxController {
         if(writer.equals(sessionInfo) && session.equals("use")) {         //기존등록자 접근인지 확인
             //비밀글일경우
             if(dbSecretCheck) {
-                if(articlePw.equals(reCheckPw)) {                         //db에 저장된 비번과 유저가 입력한 비밀번호 비교
+//                if(articlePw.equals(reCheckPw)) {                         //db에 저장된 비번과 유저가 입력한 비밀번호 비교
                     deleteArticles = boardService.deleteArticle(delete);  //db 삭제 실행
-                } else {                                                  //비밀번호가 다를경우
-                    result = "기존 입력 비밀번호를 입력해야 합니다.";           //code에 비밀번호 오류 입력
-                }
+//                } else {                                                  //비밀번호가 다를경우
+//                    result = "기존 입력 비밀번호를 입력해야 합니다.";           //code에 비밀번호 오류 입력
+//                }
             } else {                                                      //공개글일경우
                 deleteArticles = boardService.deleteArticle(delete);      //db 삭제 실행
             }

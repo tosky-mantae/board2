@@ -270,17 +270,17 @@ function modifyCheck() {
         alert('본문을 입력해주세요');
         $("#contentException").css("display", "");
     }
-    if ($("#isSecretNum").val() == "true") {
-        if ($("#articlePw").val().length > 3 && $("#articlePw").val().length < 9) {
-            modifyAjax();
-        } else {
-            alert("기존 비밀번호를 입력하시오")
-        }
-    } else {
+    // if ($("#isSecretNum").val() == "true") {
+    //     if ($("#articlePw").val().length > 3 && $("#articlePw").val().length < 9) {
+    //         modifyAjax();
+    //     } else {
+    //         alert("기존 비밀번호를 입력하시오")
+    //     }
+    // } else {
         if (confirm("수정 하시겠습니까?")) {
             modifyAjax();
         }
-    }
+    // }
 }
 
 

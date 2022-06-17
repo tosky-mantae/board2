@@ -25,7 +25,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
             .authorizeRequests()
-                .antMatchers(  "/listAjax", "/listAjaxTest" ,"/login","/loginFail", "/signUp", "/signUpCheck","/css/**" ,"/img/**" , "/js/**").permitAll() // 로그인 권한은 누구나, resources파일도 모든권한
+                .antMatchers(  "/listAjax", "/listAjaxTest" ,"/login","/loginFail","/modifyArticlePageAjax", "/pwCheckAjax","/viewArticlePageAjax","/secretCheckAjax", "/signUp", "/signUpCheck","/css/**" ,"/img/**" , "/js/**").permitAll() // 로그인 권한은 누구나, resources파일도 모든권한
                 // USER, ADMIN 접근 허용
                 .antMatchers("/userAccess").hasRole("USER")
                 .antMatchers("/userAccess").hasRole("ADMIN")
