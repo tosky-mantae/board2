@@ -116,7 +116,7 @@ function viewAjax() {
             //비밀글일경우 체크박스 체크
             if(isSecret == 1) {
                 $('input:checkbox[id="secretCheck"]').attr("checked", true);
-                // $("#articlePw").css("display" , "none");
+                $("#articlePw").css("display" , "none");//인풋창 감춤
             }
 
             $(".viewJquery").attr("disabled" , true);

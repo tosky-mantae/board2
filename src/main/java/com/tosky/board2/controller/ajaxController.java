@@ -6,6 +6,7 @@ import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -143,13 +144,14 @@ public class ajaxController {
 
 
     @PostMapping(value = "/articleWriteDbAjax")  //게시물 등록 로직 실행
-    public Map<String, Object> articleWriteDb(Principal principal,HttpServletRequest request, HttpServletResponse response, Model model){
+    public Map<String, Object> articleWriteDb(@RequestPart(value = "file", required = false) MultipartFile file,Principal principal, HttpServletRequest request, HttpServletResponse response, Model model){
 
         // html에서 정보 받아와 변수 저장
         String title = request.getParameter("title");
         String content = request.getParameter("content");
         int secretCheck = Integer.parseInt(request.getParameter("secretCheck"));
         String userPw = request.getParameter("articlePw");
+
 
         boolean isSecret;
         if(secretCheck == 1) {
