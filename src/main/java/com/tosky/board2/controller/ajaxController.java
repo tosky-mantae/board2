@@ -2,7 +2,6 @@ package com.tosky.board2.controller;
 
 
 import com.tosky.board2.service.BoardService;
-import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -11,11 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.util.*;
-
-import static com.tosky.board2.util.Utility.strToInt;
 
 @RestController
 public class ajaxController {
@@ -495,31 +490,4 @@ public class ajaxController {
         return signUpResult;
     }
 
-//    @PostMapping("/login")  //로그인 로직 실행
-//    public Map<String, Object> login(HttpServletRequest request, HttpServletResponse response, Model model) {
-//        //아이디와 비밀번호 입력 받음
-//        String userId = request.getParameter("userId");
-//        String userPw = request.getParameter("userPw");
-//
-//        //db 전달 맵 생성
-//        Map<String, Object> loginArticle = new HashMap<>();
-//        loginArticle.put("userId",userId);
-//
-//        //아이디로 비밀번호 조회해옴
-//        Map<String, Object> result = boardService.loginCheck(loginArticle);
-//        String dbPw = (String) result.get("userPassWord");
-//        String resultCode;
-//
-//        //유저 입력 pw 와 아이디에 있는 비밀번호 비교
-//        if(Objects.equals(userPw , dbPw)) {
-//            resultCode = "success";
-//        } else {
-//            resultCode = "fail";
-//        }
-//
-//        Map<String, Object> loginResult = new HashMap<>();
-//        loginResult.put("code",resultCode);
-//
-//        return loginResult;
-//    }
 }

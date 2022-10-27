@@ -12,4 +12,8 @@
     <insert id="saveUser" parameterType="com.tosky.board2.Vo.UserVo">
         insert into user ( userId, userPassWord, userTel) VALUE (#{userId}, #{userPw}, #{userTel});
     </insert>
+
+    <update id="loginTime" parameterType="com.tosky.board2.Vo.UserVo">
+        update user set last_login = now() where userId = #{userId};
+    </update>
 </mapper>

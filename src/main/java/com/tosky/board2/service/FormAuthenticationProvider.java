@@ -43,6 +43,7 @@ public class FormAuthenticationProvider implements AuthenticationProvider {
 //밑에구문이 구너한 부여임
         grantedAuthorityList.add(new SimpleGrantedAuthority(user.getUsername()));
 
+
         // 로그인 성공시 로그인 사용자 정보 반환
         return new UsernamePasswordAuthenticationToken(user, null, null);
     }

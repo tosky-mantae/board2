@@ -32,6 +32,8 @@ public class UserService implements UserDetailsService{
         if (userVo == null){
             throw new UsernameNotFoundException("User not authorized.");
         }
+
+        int loginTime = userMapper.loginTime(userId);
         return userVo;
     }
 }

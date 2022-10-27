@@ -11,4 +11,7 @@ public interface UserMapper {
 
     // 회원가입
     void saveUser(UserVo userVo);
+
+    //로그인 시간 기록
+    int loginTime(String userId);
 }
